@@ -9,6 +9,7 @@ const CONFIG = {
   // Business display name
   businessName: "Daily Jar's by Ganesh Faral",
   brandSubtitle: "by Ganesh Faral • Roha, Raigad",
+  siteUrl: "https://dailyjars.in",
 
   // Owner WhatsApp number (digits only with country code)
   whatsappNumber: "918010089297",
