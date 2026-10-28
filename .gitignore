@@ -1,0 +1,23 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Dependencies
+node_modules/
+
+# Environment variables & sensitive config
+.env
+.env.*
+*.env
+
+# Editor Folders
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
