@@ -17,8 +17,8 @@ const CONFIG = {
   whatsappChannelUrl: "[CHANNEL LINK]",
 
   // Single Source of Truth for Kitchen Address in Roha
-  pickupAddress: "Station Road, Roha, Raigad, Maharashtra - 402109",
-  landmark: "Near Roha Railway Station",
+  pickupAddress: "Roha, Raigad, Maharashtra - 402109",
+  landmark: "",
   city: "Roha",
   district: "Raigad",
   state: "Maharashtra",
@@ -27,7 +27,7 @@ const CONFIG = {
 
   // Delivery Areas in Roha
   deliveryAreas: [
-    { id: "roha_town", name: "Roha Town / Station Road", charge: 0 },
+    { id: "roha_town", name: "Roha Town", charge: 0 },
     { id: "dhatav", name: "Dhatav / MIDC Roha", charge: 0 },
     { id: "raigad_district", name: "Raigad District", charge: 0 }
   ]

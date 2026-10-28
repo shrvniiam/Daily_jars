@@ -26,8 +26,8 @@ const BUSINESS_CONFIG = {
   // Social & Pickup (read exclusively from config.js)
   instagramHandle: "@dailyjarsbyganeshfaral",
   instagramUrl: "https://instagram.com/shreeganeshfaral",
-  pickupAddress: (typeof CONFIG !== "undefined" && CONFIG.pickupAddress) ? CONFIG.pickupAddress : "Station Road, Roha, Raigad, Maharashtra - 402109",
-  landmark: (typeof CONFIG !== "undefined" && CONFIG.landmark) ? CONFIG.landmark : "Near Roha Railway Station",
+  pickupAddress: (typeof CONFIG !== "undefined" && CONFIG.pickupAddress) ? CONFIG.pickupAddress : "Roha, Raigad, Maharashtra - 402109",
+  landmark: (typeof CONFIG !== "undefined" && CONFIG.landmark) ? CONFIG.landmark : "",
   googleMapsUrl: (typeof CONFIG !== "undefined" && CONFIG.googleMapsUrl) ? CONFIG.googleMapsUrl : "https://maps.google.com/?q=Roha+Raigad+Maharashtra+402109",
   
   // Top Banner Notice (All in English)
@@ -38,7 +38,7 @@ const BUSINESS_CONFIG = {
 
   // Delivery Areas in Roha (read from config.js)
   deliveryAreas: (typeof CONFIG !== "undefined" && CONFIG.deliveryAreas) ? CONFIG.deliveryAreas : [
-    { id: "roha_town", name: "Roha Town / Station Road", charge: 0 },
+    { id: "roha_town", name: "Roha Town", charge: 0 },
     { id: "dhatav", name: "Dhatav / MIDC Roha", charge: 0 },
     { id: "raigad_district", name: "Raigad District Delivery", charge: 0 }
   ]

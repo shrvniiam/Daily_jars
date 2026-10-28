@@ -107,7 +107,7 @@ function populateBusinessInfo() {
     elements.pickupAddressDisplay.innerHTML = `
       <strong>${BUSINESS_CONFIG.businessName} Kitchen</strong><br>
       ${BUSINESS_CONFIG.pickupAddress}<br>
-      <span style="font-size: 0.8rem; color: #8C7567;">Landmark: ${BUSINESS_CONFIG.landmark}</span><br>
+      ${BUSINESS_CONFIG.landmark ? `<span style="font-size: 0.8rem; color: #8C7567;">Landmark: ${BUSINESS_CONFIG.landmark}</span><br>` : ""}
       <a href="${BUSINESS_CONFIG.googleMapsUrl}" target="_blank" rel="noopener" style="color: #6B0F1A; font-weight: 600; text-decoration: underline; font-size: 0.85rem; margin-top: 4px; display: inline-block;">
         📍 View on Google Maps
       </a>
