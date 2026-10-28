@@ -16,9 +16,9 @@ const BUSINESS_CONFIG = {
   whatsappNumber: (typeof CONFIG !== "undefined" && CONFIG.whatsappNumber) ? CONFIG.whatsappNumber : "", 
   whatsappChannelUrl: (typeof CONFIG !== "undefined" && CONFIG.whatsappChannelUrl) ? CONFIG.whatsappChannelUrl : "",
 
-  // Contact phone numbers from the pamphlet (tap-to-call)
+  // Contact phone numbers (tap-to-call)
   phoneNumbers: [
-    { label: "Orders & Support", number: "9403000241", tel: "+919403000241" },
+    { label: "Orders & WhatsApp", number: "8010089297", tel: "+918010089297" },
     { label: "Kitchen Helpline", number: "9158729083", tel: "+919158729083" },
     { label: "Dispatch Desk", number: "9028587291", tel: "+919028587291" }
   ],

@@ -399,20 +399,15 @@ function updateCartUI() {
   const totalItemsCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
 
-  let deliveryFee = 0;
-  if (state.deliveryMode === "delivery" && state.cart.length > 0) {
-    const area = BUSINESS_CONFIG.deliveryAreas.find(a => a.id === state.selectedDeliveryAreaId);
-    deliveryFee = area ? area.charge : (BUSINESS_CONFIG.deliveryAreas[0] ? BUSINESS_CONFIG.deliveryAreas[0].charge : 50);
-  }
-
-  const grandTotal = subtotal + deliveryFee;
+  const deliveryFee = 0;
+  const grandTotal = subtotal;
 
   if (elements.navCartCount) elements.navCartCount.textContent = totalItemsCount;
   if (elements.cartHeaderCount) elements.cartHeaderCount.textContent = totalItemsCount;
 
   if (elements.cartSubtotal) elements.cartSubtotal.textContent = `₹${subtotal}`;
   if (elements.cartDeliveryFee) {
-    elements.cartDeliveryFee.textContent = state.deliveryMode === "pickup" ? "FREE (Self Pickup)" : `+₹${deliveryFee}`;
+    elements.cartDeliveryFee.textContent = state.deliveryMode === "pickup" ? "FREE (Self Pickup)" : "FREE (Home Delivery)";
   }
   if (elements.cartTotal) elements.cartTotal.textContent = `₹${grandTotal}`;
 
@@ -527,8 +522,7 @@ function setupEventListeners() {
       state.deliveryMode = "delivery";
       elements.modeDeliveryBtn.classList.add("active");
       elements.modePickupBtn.classList.remove("active");
-      if (elements.deliveryAreaGroup) elements.deliveryAreaGroup.style.display = "flex";
-      if (elements.deliveryAddressGroup) elements.deliveryAddressGroup.style.display = "flex";
+      if (elements.deliveryAddressGroup) elements.deliveryAddressGroup.style.display = "block";
       updateCartUI();
     });
 
@@ -536,19 +530,7 @@ function setupEventListeners() {
       state.deliveryMode = "pickup";
       elements.modePickupBtn.classList.add("active");
       elements.modeDeliveryBtn.classList.remove("active");
-      if (elements.deliveryAreaGroup) elements.deliveryAreaGroup.style.display = "none";
       if (elements.deliveryAddressGroup) elements.deliveryAddressGroup.style.display = "none";
-      updateCartUI();
-    });
-  }
-
-  if (elements.deliveryAreaSelect) {
-    elements.deliveryAreaSelect.addEventListener("change", (e) => {
-      state.selectedDeliveryAreaId = e.target.value;
-      if (elements.areaError) {
-        elements.areaError.classList.remove("visible");
-        elements.deliveryAreaSelect.classList.remove("input-error");
-      }
       updateCartUI();
     });
   }
@@ -700,7 +682,6 @@ function handlePlaceOrder() {
 
   clearErr(elements.customerNameInput, elements.nameError);
   clearErr(elements.customerPhoneInput, elements.phoneError);
-  clearErr(elements.deliveryAreaSelect, elements.areaError);
   clearErr(elements.customerAddressInput, elements.addressError);
   clearErr(elements.customerDateInput, elements.dateError);
 
@@ -730,20 +711,12 @@ function handlePlaceOrder() {
   }
 
   // 3. Validate Delivery Mode & Address
-  let deliveryCharge = 0;
-  let deliveryAreaName = "Self Pickup";
+  const deliveryCharge = 0;
 
   if (state.deliveryMode === "delivery") {
-    if (!state.selectedDeliveryAreaId) {
-      setErr(elements.deliveryAreaSelect, elements.areaError, "Please select your delivery area in Pune.");
-    }
     if (!address || address.length < 5) {
       setErr(elements.customerAddressInput, elements.addressError, "Please enter your full delivery address with landmark.");
     }
-
-    const area = BUSINESS_CONFIG.deliveryAreas.find(a => a.id === state.selectedDeliveryAreaId);
-    deliveryCharge = area ? area.charge : 50;
-    deliveryAreaName = area ? area.name : "Pune Delivery";
   }
 
   if (hasErrors) {
@@ -753,7 +726,7 @@ function handlePlaceOrder() {
 
   // Calculate totals
   const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-  const grandTotal = subtotal + deliveryCharge;
+  const grandTotal = subtotal;
 
   // Generate unique Order ID
   const orderId = generateOrderId();
@@ -768,11 +741,11 @@ function handlePlaceOrder() {
     waMessage += `- ${item.name}, ${item.weight}, Qty: ${item.quantity}, Price: ₹${itemTotal}\n`;
   });
   waMessage += `Subtotal: ₹${subtotal}\n`;
-  waMessage += `Delivery: ₹${deliveryCharge}\n`;
+  waMessage += `Delivery: ${state.deliveryMode === "delivery" ? "Free" : "₹0"}\n`;
   waMessage += `Total: ₹${grandTotal}\n`;
 
   if (state.deliveryMode === "delivery") {
-    waMessage += `Delivery or Pickup: Delivery - ${address} (${deliveryAreaName})\n`;
+    waMessage += `Delivery or Pickup: Delivery - ${address}\n`;
   } else {
     waMessage += `Delivery or Pickup: Pickup - ${BUSINESS_CONFIG.pickupAddress}\n`;
   }
@@ -789,7 +762,6 @@ function handlePlaceOrder() {
     name,
     phone: cleanPhone,
     deliveryMode: state.deliveryMode,
-    deliveryAreaName,
     address,
     date,
     notes,
@@ -803,7 +775,7 @@ function handlePlaceOrder() {
   // Populate Order Summary Modal with escaped HTML
   if (elements.summaryOrderId) elements.summaryOrderId.textContent = orderId;
   if (elements.summarySubtotal) elements.summarySubtotal.textContent = `₹${subtotal}`;
-  if (elements.summaryDelivery) elements.summaryDelivery.textContent = `₹${deliveryCharge}`;
+  if (elements.summaryDelivery) elements.summaryDelivery.textContent = state.deliveryMode === "delivery" ? "Free" : "₹0";
   if (elements.summaryTotal) elements.summaryTotal.textContent = `₹${grandTotal}`;
 
   if (elements.summaryCustomerInfo) {
@@ -811,7 +783,7 @@ function handlePlaceOrder() {
       <div><strong>Customer:</strong> ${escapeHtml(name)} • ${escapeHtml(cleanPhone)}</div>
       <div><strong>Fulfillment:</strong> ${state.deliveryMode === "delivery" ? "Home Delivery" : "Self-Pickup (Kothrud Kitchen)"}</div>
       ${state.deliveryMode === "delivery" 
-        ? `<div><strong>Address:</strong> ${escapeHtml(address)} <span style="color:#C54F2D; font-weight:600;">(${escapeHtml(deliveryAreaName)})</span></div>` 
+        ? `<div><strong>Address:</strong> ${escapeHtml(address)}</div>` 
         : `<div><strong>Pickup Kitchen:</strong> ${escapeHtml(BUSINESS_CONFIG.pickupAddress)}</div>`}
       ${date ? `<div><strong>Preferred Date:</strong> ${escapeHtml(date)}</div>` : ""}
       ${notes ? `<div><strong>Notes:</strong> ${escapeHtml(notes)}</div>` : ""}
