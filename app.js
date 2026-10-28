@@ -149,7 +149,7 @@ function populateDeliveryAreas() {
   if (!elements.deliveryAreaSelect) return;
 
   elements.deliveryAreaSelect.innerHTML = `
-    <option value="">-- Select Your Delivery Area in Pune / Maharashtra --</option>
+    <option value="">-- Select Your Delivery Area in Roha / Raigad --</option>
     ${BUSINESS_CONFIG.deliveryAreas.map(area => `
       <option value="${area.id}">${area.name} (+₹${area.charge})</option>
     `).join("")}
@@ -781,7 +781,7 @@ function handlePlaceOrder() {
   if (elements.summaryCustomerInfo) {
     elements.summaryCustomerInfo.innerHTML = `
       <div><strong>Customer:</strong> ${escapeHtml(name)} • ${escapeHtml(cleanPhone)}</div>
-      <div><strong>Fulfillment:</strong> ${state.deliveryMode === "delivery" ? "Home Delivery" : "Self-Pickup (Kothrud Kitchen)"}</div>
+      <div><strong>Fulfillment:</strong> ${state.deliveryMode === "delivery" ? "Home Delivery" : `Self-Pickup (${(typeof CONFIG !== "undefined" && CONFIG.city) ? CONFIG.city : "Roha"} Kitchen)`}</div>
       ${state.deliveryMode === "delivery" 
         ? `<div><strong>Address:</strong> ${escapeHtml(address)}</div>` 
         : `<div><strong>Pickup Kitchen:</strong> ${escapeHtml(BUSINESS_CONFIG.pickupAddress)}</div>`}

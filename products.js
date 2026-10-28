@@ -8,7 +8,7 @@
 const BUSINESS_CONFIG = {
   businessName: (typeof CONFIG !== "undefined" && CONFIG.businessName) ? CONFIG.businessName : "Daily Jar's by Ganesh Faral",
   shortName: "Daily Jar's",
-  brandSubtitle: "by Ganesh Faral • Pune",
+  brandSubtitle: (typeof CONFIG !== "undefined" && CONFIG.brandSubtitle) ? CONFIG.brandSubtitle : "by Ganesh Faral • Roha, Raigad",
   tagline: "Homemade Taste, Sweetness of Tradition",
   ownerName: "Mrs. Sunita Kulkarni",
   
@@ -23,12 +23,12 @@ const BUSINESS_CONFIG = {
     { label: "Dispatch Desk", number: "9028587291", tel: "+919028587291" }
   ],
   
-  // Social & Pickup
+  // Social & Pickup (read exclusively from config.js)
   instagramHandle: "@dailyjarsbyganeshfaral",
   instagramUrl: "https://instagram.com/shreeganeshfaral",
-  pickupAddress: "Flat 402, Ganesh Krupa Heights, Near Ganpati Temple, Paud Road, Kothrud, Pune - 411038",
-  landmark: "Opposite Sahyadri Hospital Lane",
-  googleMapsUrl: "https://maps.google.com/?q=Kothrud+Pune",
+  pickupAddress: (typeof CONFIG !== "undefined" && CONFIG.pickupAddress) ? CONFIG.pickupAddress : "Station Road, Roha, Raigad, Maharashtra - 402109",
+  landmark: (typeof CONFIG !== "undefined" && CONFIG.landmark) ? CONFIG.landmark : "Near Roha Railway Station",
+  googleMapsUrl: (typeof CONFIG !== "undefined" && CONFIG.googleMapsUrl) ? CONFIG.googleMapsUrl : "https://maps.google.com/?q=Roha+Raigad+Maharashtra+402109",
   
   // Top Banner Notice (All in English)
   preOrderDeadline: "Open for Festive Season (Diwali & Ganesh Festivals)",
@@ -36,18 +36,11 @@ const BUSINESS_CONFIG = {
   dailyOrderNotice: "Limited batches handcrafted daily to ensure maximum crunch and freshness (Max 25 orders/day).",
   pamphletImage: "pamphlet.jpg",
 
-  // Delivery Areas & Shipping Rates in INR (₹)
-  deliveryAreas: [
-    { id: "kothrud", name: "Kothrud / Karve Nagar", charge: 40 },
-    { id: "deccan", name: "Deccan / Shivaji Nagar / FC Road", charge: 60 },
-    { id: "baner", name: "Baner / Balewadi / Aundh / Pashan", charge: 80 },
-    { id: "wakad", name: "Wakad / Hinjawadi / Pimple Saudagar", charge: 100 },
-    { id: "peth", name: "Sadashiv / Narayan / Shaniwar Peth", charge: 50 },
-    { id: "viman", name: "Kalyani Nagar / Viman Nagar / Kharadi", charge: 120 },
-    { id: "hadapsar", name: "Hadapsar / Magarpatta / Wanowrie", charge: 120 },
-    { id: "pcmc", name: "PCMC / Pimpri / Chinchwad / Nigdi", charge: 130 },
-    { id: "other_pune", name: "Other Pune Locations (Porter actuals)", charge: 90 },
-    { id: "courier", name: "Maharashtra Express Courier (2-3 days delivery)", charge: 160 }
+  // Delivery Areas in Roha (read from config.js)
+  deliveryAreas: (typeof CONFIG !== "undefined" && CONFIG.deliveryAreas) ? CONFIG.deliveryAreas : [
+    { id: "roha_town", name: "Roha Town / Station Road", charge: 0 },
+    { id: "dhatav", name: "Dhatav / MIDC Roha", charge: 0 },
+    { id: "raigad_district", name: "Raigad District Delivery", charge: 0 }
   ]
 };
 

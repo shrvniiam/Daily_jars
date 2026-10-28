@@ -11,7 +11,8 @@ All store settings, contact details, and product catalogs can be edited directly
 ### 1. Editing Store Settings (`config.js`)
 Store settings and owner WhatsApp channels are configured in `config.js`:
 - **businessName**: Store name displayed across the website.
-- **whatsappNumber**: Owner's WhatsApp number with country code (e.g. `"919403000241"`). All customer orders are directed here for confirmation. If set to a placeholder (e.g. `"91XXXXXXXXXX"`), the order button is paused automatically.
+- **whatsappNumber**: Owner's WhatsApp number with country code (e.g. `"918010089297"`). All customer orders are directed here for confirmation. If set to a placeholder (e.g. `"91XXXXXXXXXX"`), the order button is paused automatically.
+- **pickupAddress**: Kitchen pickup address in Roha (e.g. `"Station Road, Roha, Raigad, Maharashtra - 402109"`). All other files read from this single source of truth.
 - **whatsappChannelUrl**: Optional WhatsApp Channel link (e.g. `"https://whatsapp.com/channel/XXXX"`). Automatically hidden if left as a placeholder.
 
 ### 2. Editing Products Catalog (`products.js`)
