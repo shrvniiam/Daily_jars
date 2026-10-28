@@ -212,14 +212,14 @@
 
             <div class="step-card">
               <div class="step-number">3</div>
-              <h4>Send on WhatsApp</h4>
-              <p>Tap <strong>Complete Order on WhatsApp</strong>. An itemized English message will be ready to send.</p>
+              <h4>Review Order Summary</h4>
+              <p>Enter your details and tap <strong>Place Order</strong> to see your order ID and itemized summary.</p>
             </div>
 
             <div class="step-card">
               <div class="step-number">4</div>
-              <h4>UPI Pay & Enjoy</h4>
-              <p>Pay via UPI QR code, share the screenshot on WhatsApp, and receive fresh faral at your doorstep!</p>
+              <h4>WhatsApp Confirmation</h4>
+              <p>Send your order on WhatsApp. The owner confirms your booking and provides payment details directly.</p>
             </div>
           </div>
         </div>
@@ -288,10 +288,8 @@
           </a>
 
           <div style="margin-top: 1.25rem;">
-            <div style="font-size: 0.75rem; color: #F5B800; font-weight: 700; text-transform: uppercase;">Accepted
-              Payments</div>
-            <div style="font-size: 0.82rem; margin-top: 0.2rem;">Google Pay • PhonePe • Paytm • BHIM UPI • Cash on
-              Pickup</div>
+            <div style="font-size: 0.75rem; color: #F5B800; font-weight: 700; text-transform: uppercase;">Payment Details</div>
+            <div style="font-size: 0.82rem; margin-top: 0.2rem; line-height: 1.4;">Shared directly by the owner on WhatsApp upon reviewing your order.</div>
           </div>
         </div>
       </div>
@@ -304,11 +302,7 @@
     </div>
   </footer>
 
-  <!-- 7. Floating Action Buttons -->
-  <a href="https://wa.me/919403000241" id="floating-wa-btn" class="floating-wa-btn" target="_blank" rel="noopener"
-    aria-label="Direct WhatsApp Order" title="Order on WhatsApp">
-    💬
-  </a>
+
 
   <!-- Mobile Sticky Bottom Cart Bar -->
   <div class="mobile-sticky-cart-bar" id="mobile-sticky-cart-bar" role="complementary" aria-label="Cart Quick Bar">
@@ -361,35 +355,38 @@
         </div>
       </div>
 
-      <form class="checkout-form" id="checkout-form" onsubmit="return false;">
+      <form class="checkout-form" id="checkout-form" novalidate onsubmit="return false;">
         <div class="form-group">
           <label for="cust-name" class="form-label">Your Full Name *</label>
-          <input type="text" id="cust-name" class="form-input" placeholder="e.g. Rahul Patil" required
-            autocomplete="name">
+          <input type="text" id="cust-name" class="form-input" placeholder="e.g. Rahul Patil" required autocomplete="name">
+          <div class="inline-error" id="name-error">Please enter your full name.</div>
         </div>
 
         <div class="form-group">
           <label for="cust-phone" class="form-label">WhatsApp / Mobile Number *</label>
-          <input type="tel" id="cust-phone" class="form-input" placeholder="e.g. 9822001122" required
-            autocomplete="tel">
+          <input type="tel" id="cust-phone" class="form-input" placeholder="e.g. 9822001122" required autocomplete="tel" maxlength="15">
+          <div class="inline-error" id="phone-error">Please enter a valid 10-digit Indian phone number.</div>
         </div>
 
         <div class="form-group" id="delivery-area-group">
           <label for="checkout-area" class="form-label">Delivery Area in Pune *</label>
-          <select id="checkout-area" class="form-select" required>
+          <select id="checkout-area" class="form-select">
             <!-- Populated from BUSINESS_CONFIG -->
           </select>
+          <div class="inline-error" id="area-error">Please choose a delivery area.</div>
         </div>
 
         <div class="form-group" id="delivery-address-group">
           <label for="cust-address" class="form-label">Full Delivery Address & Landmark *</label>
           <textarea id="cust-address" rows="2" class="form-textarea"
             placeholder="Flat No., Society Name, Street, Landmark" autocomplete="street-address"></textarea>
+          <div class="inline-error" id="address-error">Please enter your delivery address with landmark.</div>
         </div>
 
         <div class="form-group">
           <label for="cust-date" class="form-label">Preferred Delivery Date</label>
           <input type="date" id="cust-date" class="form-input">
+          <div class="inline-error" id="date-error"></div>
         </div>
 
         <div class="form-group">
@@ -416,59 +413,87 @@
     </div>
 
     <div class="cart-footer">
-      <button type="button" class="btn-checkout-wa" id="btn-send-whatsapp">
-        <span>💬</span> Complete Order on WhatsApp
+      <button type="button" class="btn-checkout-wa btn-large-tap" id="btn-place-order" style="width: 100%;">
+        <span>🛒</span> Place Order
       </button>
-      <div style="text-align: center; font-size: 0.72rem; color: #8C7567; margin-top: 0.5rem;">
-        🔒 Direct WhatsApp Confirmation • UPI Payment with Instant Receipt
+      <div style="text-align: center; font-size: 0.76rem; color: #8C7567; margin-top: 0.5rem;">
+        💬 Orders are sent to the owner on WhatsApp for confirmation
       </div>
     </div>
   </div>
 
-  <!-- 9. UPI Payment Modal -->
-  <div class="upi-modal-overlay" id="upi-modal-overlay" role="dialog" aria-modal="true"
-    aria-labelledby="upi-modal-title">
+  <!-- 9. Order Summary Screen Modal (No Payment - WhatsApp Confirmation) -->
+  <div class="upi-modal-overlay" id="order-summary-modal" role="dialog" aria-modal="true" aria-labelledby="order-summary-title">
     <div class="upi-modal-content">
       <div class="upi-header">
-        <h3 id="upi-modal-title">✨ Complete Payment via UPI</h3>
-        <button type="button" class="cart-close-btn" data-close-upi aria-label="Close Payment Modal">✕</button>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.25rem;">📋</span>
+          <h3 id="order-summary-title">Order Summary</h3>
+        </div>
+        <button type="button" class="cart-close-btn" data-close-order-modal aria-label="Close Order Summary">✕</button>
       </div>
 
       <div class="upi-body">
-        <p style="font-size: 0.88rem; color: #5C4538;">
-          Scan the QR code or pay to our official UPI ID to confirm your festive order booking:
-        </p>
-
-        <div class="qr-box">
-          <img src="" id="upi-qr-image" alt="Scan to pay UPI" class="qr-image">
+        <!-- Order ID Badge -->
+        <div class="order-id-badge">
+          <span style="font-size: 0.85rem; color: var(--color-text-secondary); font-weight: 600;">Order ID:</span>
+          <strong id="summary-order-id" style="font-family: monospace; font-size: 1.05rem; color: var(--color-tomato);">DJ-XXXXXX-XXXX</strong>
         </div>
 
-        <div style="font-size: 1.35rem; font-weight: 700; color: #6B0F1A; margin-bottom: 0.4rem;" id="upi-pay-amount">
-          ₹0
+        <!-- Customer & Delivery Summary -->
+        <div style="background: var(--color-crema-subtle); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.55;">
+          <div id="summary-customer-info"></div>
         </div>
 
-        <div class="upi-id-badge">
-          <span id="upi-id-text">shreeganeshfaral@okaxis</span>
-          <button type="button" class="btn-copy-upi" id="btn-copy-upi">Copy</button>
+        <!-- Ordered Delicacies List -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-weight: 700; font-size: 0.82rem; color: var(--color-tomato); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            Ordered Items
+          </div>
+          <div id="summary-items-list" style="max-height: 190px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; background: var(--color-white); font-size: 0.85rem;"></div>
         </div>
 
-        <div class="upi-step-box">
-          <strong>Next Simple Steps:</strong>
-          <ol style="margin-left: 1.15rem; margin-top: 0.3rem; font-size: 0.82rem; line-height: 1.45;">
-            <li>Pay the total amount on GPay / PhonePe / Paytm / BHIM.</li>
-            <li>Take a screenshot of the successful payment.</li>
-            <li>Tap the button below to send your order & attach your payment screenshot on WhatsApp!</li>
-          </ol>
+        <!-- Price Breakdown -->
+        <div class="cart-summary-box" style="margin-bottom: 1.1rem;">
+          <div class="summary-row">
+            <span>Items Subtotal:</span>
+            <span id="summary-subtotal" style="font-weight: 600;">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span>Delivery Charges:</span>
+            <span id="summary-delivery" style="font-weight: 600;">₹0</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Grand Total:</span>
+            <span id="summary-total">₹0</span>
+          </div>
         </div>
 
-        <div class="upi-footer-actions">
-          <a href="#" id="upi-direct-pay-link" class="btn-secondary-gold"
-            style="font-size: 0.92rem; padding: 0.7rem 1rem;">
-            ⚡ Pay via UPI App (GPay / PhonePe)
-          </a>
-          <button type="button" id="btn-modal-open-wa" class="btn-checkout-wa">
-            <span>💬</span> Send Order Details on WhatsApp
+        <!-- Placeholder Notice (Shown if owner WhatsApp is still placeholder) -->
+        <div id="wa-placeholder-notice" style="display: none; background: #FFF3CD; border: 1px solid #FFE69C; color: #856404; padding: 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1rem; text-align: center; line-height: 1.4;">
+          ⚠️ <strong>WhatsApp ordering is currently paused:</strong> The owner's WhatsApp number is not configured in <code>config.js</code>. Please contact the kitchen directly.
+        </div>
+
+        <!-- Primary Action Button: Send on WhatsApp for confirmation -->
+        <div id="order-actions-container">
+          <button type="button" id="btn-confirm-whatsapp" class="btn-checkout-wa btn-large-tap" style="width: 100%;">
+            <span>💬</span> Send Order on WhatsApp for Confirmation
           </button>
+        </div>
+
+        <!-- Order Pending Confirmation Notice (Appears after clicking WhatsApp button) -->
+        <div id="order-pending-notice" class="order-pending-notice" style="display: none;">
+          <span style="font-size: 1.35rem; line-height: 1;">⏳</span>
+          <div>
+            <strong>Thank you!</strong> Your order is not confirmed until the owner replies on WhatsApp. Please send the message to complete your order.
+          </div>
+        </div>
+
+        <!-- Secondary Action: WhatsApp Channel for updates & offers -->
+        <div id="channel-container" style="display: none; margin-top: 0.85rem;">
+          <a href="#" id="btn-wa-channel" target="_blank" rel="noopener" class="btn-wa-channel btn-large-tap">
+            <span>📢</span> Follow our WhatsApp Channel for offers and festival updates
+          </a>
         </div>
       </div>
     </div>
@@ -494,12 +519,18 @@
     </div>
   </div>
 
+  <!-- Floating WhatsApp Chat Button on Every Page -->
+  <a href="#" id="floating-wa-btn" class="floating-wa-btn" title="Need help? Chat on WhatsApp" aria-label="Chat with Owner on WhatsApp" target="_blank" rel="noopener">
+    <span aria-hidden="true">💬</span>
+  </a>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
   <!-- Scripts with cache buster -->
-  <script src="products.js?v=2.4"></script>
-  <script src="app.js?v=2.4"></script>
+  <script src="config.js?v=3.0"></script>
+  <script src="products.js?v=3.0"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 
 </html>

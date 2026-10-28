@@ -6,15 +6,16 @@
  */
 
 const BUSINESS_CONFIG = {
-  businessName: "Daily Jar's by Ganesh Faral",
+  businessName: (typeof CONFIG !== "undefined" && CONFIG.businessName) ? CONFIG.businessName : "Daily Jar's by Ganesh Faral",
   shortName: "Daily Jar's",
   brandSubtitle: "by Ganesh Faral • Pune",
   tagline: "Homemade Taste, Sweetness of Tradition",
   ownerName: "Mrs. Sunita Kulkarni",
   
-  // WhatsApp ordering number (country code + 10 digits)
-  whatsappNumber: "919403000241", 
-  
+  // WhatsApp ordering number (read exclusively from config.js)
+  whatsappNumber: (typeof CONFIG !== "undefined" && CONFIG.whatsappNumber) ? CONFIG.whatsappNumber : "", 
+  whatsappChannelUrl: (typeof CONFIG !== "undefined" && CONFIG.whatsappChannelUrl) ? CONFIG.whatsappChannelUrl : "",
+
   // Contact phone numbers from the pamphlet (tap-to-call)
   phoneNumbers: [
     { label: "Orders & Support", number: "9403000241", tel: "+919403000241" },
@@ -28,10 +29,6 @@ const BUSINESS_CONFIG = {
   pickupAddress: "Flat 402, Ganesh Krupa Heights, Near Ganpati Temple, Paud Road, Kothrud, Pune - 411038",
   landmark: "Opposite Sahyadri Hospital Lane",
   googleMapsUrl: "https://maps.google.com/?q=Kothrud+Pune",
-  
-  // Payment info
-  upiId: "shreeganeshfaral@okaxis",
-  merchantName: "Daily Jars by Ganesh Faral",
   
   // Top Banner Notice (All in English)
   preOrderDeadline: "Open for Festive Season (Diwali & Ganesh Festivals)",

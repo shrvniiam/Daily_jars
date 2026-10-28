@@ -8,12 +8,11 @@ An online ordering website for homemade Maharashtrian ladoo and faral.
 
 All store settings, contact details, and product catalogs can be edited directly in the JavaScript configuration files:
 
-### 1. Editing Store Settings (`config.js` / `products.js`)
-Store details are configured in the `BUSINESS_CONFIG` object inside `products.js`:
-- **Store Name & Tagline**: `businessName`, `tagline`, and `brandSubtitle`
-- **WhatsApp & Phone Numbers**: Update `whatsappNumber` (e.g., `"919403000241"`) and the `phoneNumbers` array for order calls
-- **Payment & UPI Details**: Set `upiId` (e.g., `"shreeganeshfaral@okaxis"`) and `merchantName`
-- **Pickup & Delivery Areas**: Update `pickupAddress` and the `deliveryAreas` list with custom shipping rates
+### 1. Editing Store Settings (`config.js`)
+Store settings and owner WhatsApp channels are configured in `config.js`:
+- **businessName**: Store name displayed across the website.
+- **whatsappNumber**: Owner's WhatsApp number with country code (e.g. `"919403000241"`). All customer orders are directed here for confirmation. If set to a placeholder (e.g. `"91XXXXXXXXXX"`), the order button is paused automatically.
+- **whatsappChannelUrl**: Optional WhatsApp Channel link (e.g. `"https://whatsapp.com/channel/XXXX"`). Automatically hidden if left as a placeholder.
 
 ### 2. Editing Products Catalog (`products.js`)
 Products are defined in the `PRODUCTS` array inside `products.js`:

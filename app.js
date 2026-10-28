@@ -39,12 +39,30 @@ const elements = {
   customerAddressInput: document.getElementById("cust-address"),
   customerDateInput: document.getElementById("cust-date"),
   customerNotesInput: document.getElementById("cust-notes"),
-  btnSendWhatsapp: document.getElementById("btn-send-whatsapp"),
-  upiModalOverlay: document.getElementById("upi-modal-overlay"),
-  upiQrImg: document.getElementById("upi-qr-image"),
-  upiIdText: document.getElementById("upi-id-text"),
-  upiPayAmountText: document.getElementById("upi-pay-amount"),
-  upiDirectPayLink: document.getElementById("upi-direct-pay-link"),
+  btnPlaceOrder: document.getElementById("btn-place-order"),
+  
+  // Validation Error Elements
+  nameError: document.getElementById("name-error"),
+  phoneError: document.getElementById("phone-error"),
+  areaError: document.getElementById("area-error"),
+  addressError: document.getElementById("address-error"),
+  dateError: document.getElementById("date-error"),
+
+  // Order Summary Modal Elements
+  orderSummaryModal: document.getElementById("order-summary-modal"),
+  summaryOrderId: document.getElementById("summary-order-id"),
+  summaryCustomerInfo: document.getElementById("summary-customer-info"),
+  summaryItemsList: document.getElementById("summary-items-list"),
+  summarySubtotal: document.getElementById("summary-subtotal"),
+  summaryDelivery: document.getElementById("summary-delivery"),
+  summaryTotal: document.getElementById("summary-total"),
+  btnConfirmWhatsapp: document.getElementById("btn-confirm-whatsapp"),
+  orderPendingNotice: document.getElementById("order-pending-notice"),
+  waPlaceholderNotice: document.getElementById("wa-placeholder-notice"),
+  orderActionsContainer: document.getElementById("order-actions-container"),
+  channelContainer: document.getElementById("channel-container"),
+  btnWaChannel: document.getElementById("btn-wa-channel"),
+
   mobileStickyBar: document.getElementById("mobile-sticky-cart-bar"),
   mobileBarQty: document.getElementById("mobile-bar-qty"),
   mobileBarTotal: document.getElementById("mobile-bar-total"),
@@ -527,142 +545,362 @@ function setupEventListeners() {
   if (elements.deliveryAreaSelect) {
     elements.deliveryAreaSelect.addEventListener("change", (e) => {
       state.selectedDeliveryAreaId = e.target.value;
+      if (elements.areaError) {
+        elements.areaError.classList.remove("visible");
+        elements.deliveryAreaSelect.classList.remove("input-error");
+      }
       updateCartUI();
     });
   }
 
-  if (elements.btnSendWhatsapp) {
-    elements.btnSendWhatsapp.addEventListener("click", handleCheckoutWhatsApp);
+  // Clear inline errors as user types
+  if (elements.customerNameInput) {
+    elements.customerNameInput.addEventListener("input", () => {
+      if (elements.nameError) elements.nameError.classList.remove("visible");
+      elements.customerNameInput.classList.remove("input-error");
+    });
+  }
+  if (elements.customerPhoneInput) {
+    elements.customerPhoneInput.addEventListener("input", () => {
+      if (elements.phoneError) elements.phoneError.classList.remove("visible");
+      elements.customerPhoneInput.classList.remove("input-error");
+    });
+  }
+  if (elements.customerAddressInput) {
+    elements.customerAddressInput.addEventListener("input", () => {
+      if (elements.addressError) elements.addressError.classList.remove("visible");
+      elements.customerAddressInput.classList.remove("input-error");
+    });
   }
 
-  document.querySelectorAll("[data-close-upi]").forEach(el => {
-    el.addEventListener("click", () => {
-      if (elements.upiModalOverlay) elements.upiModalOverlay.classList.remove("active");
-    });
+  // Set min date on date input to today
+  if (elements.customerDateInput) {
+    const todayStr = new Date().toISOString().split("T")[0];
+    elements.customerDateInput.min = todayStr;
+  }
+
+  // Place Order button in cart drawer
+  if (elements.btnPlaceOrder) {
+    elements.btnPlaceOrder.addEventListener("click", handlePlaceOrder);
+  }
+
+  // Close Order Summary modal
+  document.querySelectorAll("[data-close-order-modal]").forEach(el => {
+    el.addEventListener("click", closeOrderSummaryModal);
   });
 
-  const copyUpiBtn = document.getElementById("btn-copy-upi");
-  if (copyUpiBtn) {
-    copyUpiBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(BUSINESS_CONFIG.upiId).then(() => {
-        copyUpiBtn.textContent = "✓ Copied!";
-        setTimeout(() => { copyUpiBtn.textContent = "Copy"; }, 2000);
-      }).catch(() => {
-        alert(`UPI ID: ${BUSINESS_CONFIG.upiId}`);
-      });
-    });
+  // Confirm on WhatsApp button in Order Summary modal
+  if (elements.btnConfirmWhatsapp) {
+    elements.btnConfirmWhatsapp.addEventListener("click", handleConfirmWhatsApp);
+  }
+
+  // Setup Floating and Hero WhatsApp links from CONFIG
+  setupWhatsAppLinks();
+}
+
+/**
+ * Configure floating WhatsApp button and links from master CONFIG
+ */
+function setupWhatsAppLinks() {
+  const waNumber = getWhatsAppNumber();
+  const waDirectUrl = isPlaceholder(waNumber) ? "#" : `https://wa.me/${waNumber}`;
+
+  if (elements.floatingWaBtn) {
+    elements.floatingWaBtn.href = waDirectUrl;
+    if (isPlaceholder(waNumber)) {
+      elements.floatingWaBtn.title = "WhatsApp number not configured";
+    }
+  }
+
+  if (elements.heroWaBtn) {
+    elements.heroWaBtn.href = waDirectUrl;
   }
 }
 
 /**
- * Generate WhatsApp Order Message (100% English)
+ * Helper: Read WhatsApp number strictly from CONFIG (digits only)
  */
-function handleCheckoutWhatsApp() {
+function getWhatsAppNumber() {
+  const raw = (typeof CONFIG !== "undefined" && CONFIG.whatsappNumber) 
+    ? String(CONFIG.whatsappNumber).trim() 
+    : (BUSINESS_CONFIG.whatsappNumber ? String(BUSINESS_CONFIG.whatsappNumber).trim() : "");
+  return raw.replace(/[^\d]/g, "");
+}
+
+/**
+ * Helper: Detect placeholder values
+ */
+function isPlaceholder(value) {
+  if (!value || typeof value !== "string") return true;
+  const v = value.trim();
+  if (v === "" || v.includes("[") || v.includes("]")) return true;
+  if (/x{3,}/i.test(v)) return true; // contains XXX or xxx
+  if (v === "91XXXXXXXXXX") return true;
+  return false;
+}
+
+/**
+ * Helper: Escape HTML to prevent injection
+ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
+ * Helper: Generate Order ID like DJ-YYMMDD-XXXX
+ */
+function generateOrderId() {
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let rand = "";
+  for (let i = 0; i < 4; i++) {
+    rand += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `DJ-${yy}${mm}${dd}-${rand}`;
+}
+
+// Active pending order state
+let activeOrder = null;
+
+/**
+ * Checkout Step 1 & 2: Validate Fields and Show Order Summary Screen
+ */
+function handlePlaceOrder() {
   if (state.cart.length === 0) {
-    alert("Your cart is empty! Please choose your favorite faral delicacies.");
+    showToast("Your cart is empty! Please choose items to order.");
     return;
   }
 
+  // Clear previous errors
+  let hasErrors = false;
+  let firstErrorEl = null;
+
+  const clearErr = (input, err) => {
+    if (input) input.classList.remove("input-error");
+    if (err) err.classList.remove("visible");
+  };
+  const setErr = (input, err, msg) => {
+    if (input) input.classList.add("input-error");
+    if (err) {
+      if (msg) err.textContent = msg;
+      err.classList.add("visible");
+    }
+    hasErrors = true;
+    if (!firstErrorEl && input) firstErrorEl = input;
+  };
+
+  clearErr(elements.customerNameInput, elements.nameError);
+  clearErr(elements.customerPhoneInput, elements.phoneError);
+  clearErr(elements.deliveryAreaSelect, elements.areaError);
+  clearErr(elements.customerAddressInput, elements.addressError);
+  clearErr(elements.customerDateInput, elements.dateError);
+
   const name = elements.customerNameInput ? elements.customerNameInput.value.trim() : "";
-  const phone = elements.customerPhoneInput ? elements.customerPhoneInput.value.trim() : "";
+  const rawPhone = elements.customerPhoneInput ? elements.customerPhoneInput.value.trim() : "";
   const address = elements.customerAddressInput ? elements.customerAddressInput.value.trim() : "";
   const date = elements.customerDateInput ? elements.customerDateInput.value.trim() : "";
   const notes = elements.customerNotesInput ? elements.customerNotesInput.value.trim() : "";
 
-  if (!name) {
-    alert("Please enter your Full Name.");
-    if (elements.customerNameInput) elements.customerNameInput.focus();
-    return;
-  }
-  if (!phone || phone.length < 10) {
-    alert("Please enter a valid 10-digit Phone Number.");
-    if (elements.customerPhoneInput) elements.customerPhoneInput.focus();
-    return;
-  }
-  if (state.deliveryMode === "delivery") {
-    if (!state.selectedDeliveryAreaId) {
-      alert("Please select your Delivery Area.");
-      if (elements.deliveryAreaSelect) elements.deliveryAreaSelect.focus();
-      return;
-    }
-    if (!address) {
-      alert("Please enter your Delivery Address & Landmark.");
-      if (elements.customerAddressInput) elements.customerAddressInput.focus();
-      return;
-    }
+  // 1. Validate Full Name
+  if (!name || name.length < 2) {
+    setErr(elements.customerNameInput, elements.nameError, "Please enter your full name.");
   }
 
-  const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+  // 2. Validate 10-digit Indian Mobile Number
+  const digitsOnly = rawPhone.replace(/\D/g, "");
+  let cleanPhone = digitsOnly;
+  if (digitsOnly.length === 12 && digitsOnly.startsWith("91")) {
+    cleanPhone = digitsOnly.slice(2);
+  } else if (digitsOnly.length === 11 && digitsOnly.startsWith("0")) {
+    cleanPhone = digitsOnly.slice(1);
+  }
+
+  const indianPhoneRegex = /^[6-9]\d{9}$/;
+  if (!cleanPhone || !indianPhoneRegex.test(cleanPhone)) {
+    setErr(elements.customerPhoneInput, elements.phoneError, "Please enter a valid 10-digit Indian mobile number (e.g. 9822001122).");
+  }
+
+  // 3. Validate Delivery Mode & Address
   let deliveryCharge = 0;
   let deliveryAreaName = "Self Pickup";
 
   if (state.deliveryMode === "delivery") {
+    if (!state.selectedDeliveryAreaId) {
+      setErr(elements.deliveryAreaSelect, elements.areaError, "Please select your delivery area in Pune.");
+    }
+    if (!address || address.length < 5) {
+      setErr(elements.customerAddressInput, elements.addressError, "Please enter your full delivery address with landmark.");
+    }
+
     const area = BUSINESS_CONFIG.deliveryAreas.find(a => a.id === state.selectedDeliveryAreaId);
     deliveryCharge = area ? area.charge : 50;
-    deliveryAreaName = area ? area.name : "Pune";
+    deliveryAreaName = area ? area.name : "Pune Delivery";
   }
 
+  if (hasErrors) {
+    if (firstErrorEl) firstErrorEl.focus();
+    return;
+  }
+
+  // Calculate totals
+  const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
   const grandTotal = subtotal + deliveryCharge;
 
-  // Build WhatsApp Order in 100% English
-  let message = `*✨ NEW FARAL ORDER - DAILY JAR'S BY GANESH FARAL ✨*\n\n`;
-  message += `*Customer Details:*\n`;
-  message += `• Name: ${name}\n`;
-  message += `• Phone: ${phone}\n`;
-  message += `• Order Type: ${state.deliveryMode === "delivery" ? "Home Delivery" : "Self-Pickup"}\n`;
+  // Generate unique Order ID
+  const orderId = generateOrderId();
+
+  // Build English WhatsApp Order Message exactly per template
+  let waMessage = `New Order ${orderId}\n`;
+  waMessage += `Name: ${name}\n`;
+  waMessage += `Phone: ${cleanPhone}\n`;
+  waMessage += `Items:\n`;
+  state.cart.forEach(item => {
+    const itemTotal = item.unitPrice * item.quantity;
+    waMessage += `- ${item.name}, ${item.weight}, Qty: ${item.quantity}, Price: ₹${itemTotal}\n`;
+  });
+  waMessage += `Subtotal: ₹${subtotal}\n`;
+  waMessage += `Delivery: ₹${deliveryCharge}\n`;
+  waMessage += `Total: ₹${grandTotal}\n`;
 
   if (state.deliveryMode === "delivery") {
-    message += `• Delivery Area: ${deliveryAreaName}\n`;
-    message += `• Delivery Address: ${address}\n`;
+    waMessage += `Delivery or Pickup: Delivery - ${address} (${deliveryAreaName})\n`;
   } else {
-    message += `• Pickup Location: ${BUSINESS_CONFIG.pickupAddress}\n`;
+    waMessage += `Delivery or Pickup: Pickup - ${BUSINESS_CONFIG.pickupAddress}\n`;
   }
 
-  if (date) message += `• Preferred Delivery Date: ${date}\n`;
-  if (notes) message += `• Special Instructions: ${notes}\n`;
+  waMessage += `Preferred date: ${date ? date : "Standard festive dispatch"}\n`;
+  if (notes) {
+    waMessage += `Special instructions: ${notes}\n`;
+  }
+  waMessage += `\nPlease confirm my order and share the payment details.`;
 
-  message += `\n*Itemized Order Summary:*\n`;
-  message += `--------------------------------\n`;
+  // Store active order state
+  activeOrder = {
+    orderId,
+    name,
+    phone: cleanPhone,
+    deliveryMode: state.deliveryMode,
+    deliveryAreaName,
+    address,
+    date,
+    notes,
+    items: [...state.cart],
+    subtotal,
+    deliveryCharge,
+    grandTotal,
+    waMessage
+  };
 
-  state.cart.forEach((item, index) => {
-    const itemTotal = item.unitPrice * item.quantity;
-    message += `${index + 1}. *${item.name}* (${item.weight})\n`;
-    message += `   Qty: ${item.quantity} x ₹${item.unitPrice} = *₹${itemTotal}*\n`;
-  });
+  // Populate Order Summary Modal with escaped HTML
+  if (elements.summaryOrderId) elements.summaryOrderId.textContent = orderId;
+  if (elements.summarySubtotal) elements.summarySubtotal.textContent = `₹${subtotal}`;
+  if (elements.summaryDelivery) elements.summaryDelivery.textContent = `₹${deliveryCharge}`;
+  if (elements.summaryTotal) elements.summaryTotal.textContent = `₹${grandTotal}`;
 
-  message += `--------------------------------\n`;
-  message += `*Subtotal:* ₹${subtotal}\n`;
-  message += `*Delivery Fee (${deliveryAreaName}):* ₹${deliveryCharge}\n`;
-  message += `*Grand Total Payable:* *₹${grandTotal}*\n\n`;
-  message += `*Payment Details:*\n`;
-  message += `• UPI ID: ${BUSINESS_CONFIG.upiId}\n`;
-  message += `• Note: I will share the UPI payment screenshot on this chat to confirm.\n\n`;
-  message += `Please confirm my order booking and fresh dispatch slot. Thank you!`;
+  if (elements.summaryCustomerInfo) {
+    elements.summaryCustomerInfo.innerHTML = `
+      <div><strong>Customer:</strong> ${escapeHtml(name)} • ${escapeHtml(cleanPhone)}</div>
+      <div><strong>Fulfillment:</strong> ${state.deliveryMode === "delivery" ? "Home Delivery" : "Self-Pickup (Kothrud Kitchen)"}</div>
+      ${state.deliveryMode === "delivery" 
+        ? `<div><strong>Address:</strong> ${escapeHtml(address)} <span style="color:#C54F2D; font-weight:600;">(${escapeHtml(deliveryAreaName)})</span></div>` 
+        : `<div><strong>Pickup Kitchen:</strong> ${escapeHtml(BUSINESS_CONFIG.pickupAddress)}</div>`}
+      ${date ? `<div><strong>Preferred Date:</strong> ${escapeHtml(date)}</div>` : ""}
+      ${notes ? `<div><strong>Notes:</strong> ${escapeHtml(notes)}</div>` : ""}
+    `;
+  }
 
-  const waUrl = `https://wa.me/${BUSINESS_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
-  showUpiPaymentModal(grandTotal, waUrl);
+  if (elements.summaryItemsList) {
+    elements.summaryItemsList.innerHTML = state.cart.map(item => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.4rem 0; border-bottom:1px solid #F0E7CB;">
+        <div>
+          <div style="font-weight:600; color:#2D1B14;">${escapeHtml(item.name)}</div>
+          <div style="font-size:0.75rem; color:#887268;">${escapeHtml(item.weight)} • Qty: ${item.quantity} × ₹${item.unitPrice}</div>
+        </div>
+        <div style="font-weight:700; color:#C54F2D;">₹${item.unitPrice * item.quantity}</div>
+      </div>
+    `).join("");
+  }
+
+  // Check if owner's WhatsApp number is still a placeholder
+  const waNumber = getWhatsAppNumber();
+  const rawWaConfig = (typeof CONFIG !== "undefined" && CONFIG.whatsappNumber) ? CONFIG.whatsappNumber : "";
+
+  if (isPlaceholder(rawWaConfig) || waNumber.length < 10) {
+    if (elements.orderActionsContainer) elements.orderActionsContainer.style.display = "none";
+    if (elements.waPlaceholderNotice) elements.waPlaceholderNotice.style.display = "block";
+  } else {
+    if (elements.orderActionsContainer) elements.orderActionsContainer.style.display = "block";
+    if (elements.waPlaceholderNotice) elements.waPlaceholderNotice.style.display = "none";
+  }
+
+  // Reset confirmation notice and button state
+  if (elements.orderPendingNotice) elements.orderPendingNotice.style.display = "none";
+  if (elements.btnConfirmWhatsapp) {
+    elements.btnConfirmWhatsapp.innerHTML = `<span>💬</span> Send Order on WhatsApp for Confirmation`;
+  }
+
+  // WhatsApp Channel secondary button
+  const channelUrl = (typeof CONFIG !== "undefined" && CONFIG.whatsappChannelUrl) ? CONFIG.whatsappChannelUrl : "";
+  if (!isPlaceholder(channelUrl)) {
+    if (elements.channelContainer) elements.channelContainer.style.display = "block";
+    if (elements.btnWaChannel) elements.btnWaChannel.href = channelUrl;
+  } else {
+    if (elements.channelContainer) elements.channelContainer.style.display = "none";
+  }
+
+  // Close cart drawer and display Order Summary modal
+  closeCart();
+  if (elements.orderSummaryModal) elements.orderSummaryModal.classList.add("active");
 }
 
 /**
- * UPI Modal & QR Display
+ * Checkout Step 4 & 5: Customer sends order on WhatsApp
  */
-function showUpiPaymentModal(amount, whatsappUrl) {
-  if (elements.upiPayAmountText) elements.upiPayAmountText.textContent = `₹${amount}`;
-  if (elements.upiIdText) elements.upiIdText.textContent = BUSINESS_CONFIG.upiId;
+function handleConfirmWhatsApp() {
+  if (!activeOrder) return;
 
-  const upiUri = `upi://pay?pa=${encodeURIComponent(BUSINESS_CONFIG.upiId)}&pn=${encodeURIComponent(BUSINESS_CONFIG.merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent("Daily Jars Faral Order")}`;
-
-  if (elements.upiQrImg) {
-    elements.upiQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data=${encodeURIComponent(upiUri)}`;
-    elements.upiQrImg.alt = `UPI QR Code for ₹${amount}`;
+  const waNumber = getWhatsAppNumber();
+  if (isPlaceholder(waNumber) || waNumber.length < 10) {
+    alert("Owner WhatsApp number is not configured in config.js yet.");
+    return;
   }
 
-  if (elements.upiDirectPayLink) elements.upiDirectPayLink.href = upiUri;
+  const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(activeOrder.waMessage)}`;
+  window.open(waUrl, "_blank");
 
-  const modalWaBtn = document.getElementById("btn-modal-open-wa");
-  if (modalWaBtn) {
-    modalWaBtn.onclick = () => { window.open(whatsappUrl, "_blank"); };
+  // Show pending confirmation notice
+  if (elements.orderPendingNotice) {
+    elements.orderPendingNotice.style.display = "flex";
   }
 
-  if (elements.upiModalOverlay) elements.upiModalOverlay.classList.add("active");
+  // Update button so they can re-open WhatsApp if needed
+  if (elements.btnConfirmWhatsapp) {
+    elements.btnConfirmWhatsapp.innerHTML = `<span>💬</span> Reopen WhatsApp Message`;
+  }
+
+  // Clear cart ONLY after clicking the WhatsApp button
+  state.cart = [];
+  saveCartToStorage();
+  updateCartUI();
+
+  // Keep the summary modal open!
 }
+
+/**
+ * Close Order Summary Modal
+ */
+function closeOrderSummaryModal() {
+  if (elements.orderSummaryModal) {
+    elements.orderSummaryModal.classList.remove("active");
+  }
+}
+
