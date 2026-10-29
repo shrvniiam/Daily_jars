@@ -158,20 +158,33 @@ function populateBusinessInfo() {
 }
 
 /**
+ * Helper to calculate current delivery fee
+ */
+function getDeliveryFee() {
+  if (state.deliveryMode === "pickup") {
+    return 0;
+  }
+  const area = (BUSINESS_CONFIG.deliveryAreas || []).find(a => a.id === state.selectedDeliveryAreaId);
+  if (area && typeof area.charge === "number") {
+    return area.charge;
+  }
+  return 30; // Default to Roha delivery charge ₹30
+}
+
+/**
  * Populate Delivery Areas Dropdown
  */
 function populateDeliveryAreas() {
   if (!elements.deliveryAreaSelect) return;
 
-  elements.deliveryAreaSelect.innerHTML = `
-    <option value="">-- Select Your Delivery Area in Roha / Raigad --</option>
-    ${BUSINESS_CONFIG.deliveryAreas.map(area => `
-      <option value="${area.id}">${area.name} (+₹${area.charge})</option>
-    `).join("")}
-  `;
+  elements.deliveryAreaSelect.innerHTML = (BUSINESS_CONFIG.deliveryAreas || []).map(area => `
+    <option value="${area.id}">${area.name === 'Roha' ? '📍 Roha (Home Delivery)' : '🚚 Other City (Courier Delivery)'} — ₹${area.charge}</option>
+  `).join("");
 
-  if (BUSINESS_CONFIG.deliveryAreas.length > 0) {
-    state.selectedDeliveryAreaId = BUSINESS_CONFIG.deliveryAreas[0].id;
+  if (BUSINESS_CONFIG.deliveryAreas && BUSINESS_CONFIG.deliveryAreas.length > 0) {
+    if (!state.selectedDeliveryAreaId) {
+      state.selectedDeliveryAreaId = BUSINESS_CONFIG.deliveryAreas[0].id;
+    }
     elements.deliveryAreaSelect.value = state.selectedDeliveryAreaId;
   }
 }
@@ -414,15 +427,21 @@ function updateCartUI() {
   const totalItemsCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
 
-  const deliveryFee = 0;
-  const grandTotal = subtotal;
+  const deliveryFee = totalItemsCount > 0 ? getDeliveryFee() : 0;
+  const grandTotal = totalItemsCount > 0 ? (subtotal + deliveryFee) : 0;
 
   if (elements.navCartCount) elements.navCartCount.textContent = totalItemsCount;
   if (elements.cartHeaderCount) elements.cartHeaderCount.textContent = totalItemsCount;
 
   if (elements.cartSubtotal) elements.cartSubtotal.textContent = `₹${subtotal}`;
   if (elements.cartDeliveryFee) {
-    elements.cartDeliveryFee.textContent = state.deliveryMode === "pickup" ? "FREE (Self Pickup)" : "FREE (Home Delivery)";
+    if (state.deliveryMode === "pickup") {
+      elements.cartDeliveryFee.textContent = "FREE (Self Pickup)";
+    } else {
+      const area = (BUSINESS_CONFIG.deliveryAreas || []).find(a => a.id === state.selectedDeliveryAreaId);
+      const areaLabel = area ? area.name : (state.selectedDeliveryAreaId === "other_city" ? "Other City" : "Roha");
+      elements.cartDeliveryFee.textContent = `₹${deliveryFee} (${areaLabel} Delivery)`;
+    }
   }
   if (elements.cartTotal) elements.cartTotal.textContent = `₹${grandTotal}`;
 
@@ -538,6 +557,7 @@ function setupEventListeners() {
       elements.modeDeliveryBtn.classList.add("active");
       elements.modePickupBtn.classList.remove("active");
       if (elements.deliveryAddressGroup) elements.deliveryAddressGroup.style.display = "block";
+      if (elements.deliveryAreaGroup) elements.deliveryAreaGroup.style.display = "block";
       updateCartUI();
     });
 
@@ -546,6 +566,15 @@ function setupEventListeners() {
       elements.modePickupBtn.classList.add("active");
       elements.modeDeliveryBtn.classList.remove("active");
       if (elements.deliveryAddressGroup) elements.deliveryAddressGroup.style.display = "none";
+      if (elements.deliveryAreaGroup) elements.deliveryAreaGroup.style.display = "none";
+      updateCartUI();
+    });
+  }
+
+  // Delivery Area Selection change
+  if (elements.deliveryAreaSelect) {
+    elements.deliveryAreaSelect.addEventListener("change", (e) => {
+      state.selectedDeliveryAreaId = e.target.value;
       updateCartUI();
     });
   }
@@ -726,7 +755,7 @@ function handlePlaceOrder() {
   }
 
   // 3. Validate Delivery Mode & Address
-  const deliveryCharge = 0;
+  const deliveryCharge = getDeliveryFee();
 
   if (state.deliveryMode === "delivery") {
     if (!address || address.length < 5) {
@@ -741,10 +770,13 @@ function handlePlaceOrder() {
 
   // Calculate totals
   const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-  const grandTotal = subtotal;
+  const grandTotal = subtotal + deliveryCharge;
 
   // Generate unique Order ID
   const orderId = generateOrderId();
+
+  const area = (BUSINESS_CONFIG.deliveryAreas || []).find(a => a.id === state.selectedDeliveryAreaId);
+  const areaLabel = area ? area.name : (state.selectedDeliveryAreaId === "other_city" ? "Other City" : "Roha");
 
   // Build English WhatsApp Order Message exactly per template
   let waMessage = `New Order ${orderId}\n`;
@@ -756,11 +788,11 @@ function handlePlaceOrder() {
     waMessage += `- ${item.name}, ${item.weight}, Qty: ${item.quantity}, Price: ₹${itemTotal}\n`;
   });
   waMessage += `Subtotal: ₹${subtotal}\n`;
-  waMessage += `Delivery: ${state.deliveryMode === "delivery" ? "Free" : "₹0"}\n`;
+  waMessage += `Delivery: ${state.deliveryMode === "delivery" ? `₹${deliveryCharge} (${areaLabel})` : "₹0 (Self-Pickup)"}\n`;
   waMessage += `Total: ₹${grandTotal}\n`;
 
   if (state.deliveryMode === "delivery") {
-    waMessage += `Delivery or Pickup: Delivery - ${address}\n`;
+    waMessage += `Delivery or Pickup: Delivery (${areaLabel}) - ${address}\n`;
   } else {
     waMessage += `Delivery or Pickup: Pickup - ${BUSINESS_CONFIG.pickupAddress}\n`;
   }
@@ -790,7 +822,9 @@ function handlePlaceOrder() {
   // Populate Order Summary Modal with escaped HTML
   if (elements.summaryOrderId) elements.summaryOrderId.textContent = orderId;
   if (elements.summarySubtotal) elements.summarySubtotal.textContent = `₹${subtotal}`;
-  if (elements.summaryDelivery) elements.summaryDelivery.textContent = state.deliveryMode === "delivery" ? "Free" : "₹0";
+  if (elements.summaryDelivery) {
+    elements.summaryDelivery.textContent = state.deliveryMode === "delivery" ? `₹${deliveryCharge} (${areaLabel})` : "₹0 (Self-Pickup)";
+  }
   if (elements.summaryTotal) elements.summaryTotal.textContent = `₹${grandTotal}`;
 
   if (elements.summaryCustomerInfo) {

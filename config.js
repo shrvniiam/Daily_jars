@@ -29,10 +29,9 @@ const CONFIG = {
   pincode: "402109",
   googleMapsUrl: "https://maps.google.com/?q=Roha+Raigad+Maharashtra+402109",
 
-  // Delivery Areas in Roha
+  // Delivery Areas & Charges (Roha ₹30, Other City ₹80)
   deliveryAreas: [
-    { id: "roha_town", name: "Roha Town", charge: 0 },
-    { id: "dhatav", name: "Dhatav / MIDC Roha", charge: 0 },
-    { id: "raigad_district", name: "Raigad District", charge: 0 }
+    { id: "roha", name: "Roha", charge: 30 },
+    { id: "other_city", name: "Other City", charge: 80 }
   ]
 };

@@ -259,12 +259,13 @@
         <div class="delivery-info-grid">
           <div class="info-box">
             <h4 class="info-box-title"><span>🚚</span> Delivery Information</h4>
-            <p style="margin-bottom: 0.5rem;">Fresh batches delivered directly to your doorstep across Roha and Raigad district.
+            <p style="margin-bottom: 0.5rem;">Fresh batches delivered directly to your doorstep.
             </p>
             <ul style="list-style-type: disc; margin-left: 1.25rem; line-height: 1.6;">
+              <li><strong>Roha Delivery:</strong> Nominal doorstep delivery charge of ₹30 in Roha.</li>
+              <li><strong>Other Cities (Courier):</strong> Fast courier delivery across Maharashtra (Mumbai, Pune, Thane, etc.) at ₹80.</li>
+              <li><strong>Self-Pickup:</strong> 100% Free pickup from our Roha kitchen.</li>
               <li><strong>Pre-order Notice:</strong> Kindly book early for festive peaks (Diwali & Ganesh Utsav).</li>
-              <li><strong>Fresh Small Batches:</strong> Limited daily orders to guarantee the highest crispness.</li>
-              <li><strong>Rest of Maharashtra:</strong> Express 2-3 day courier delivery across Maharashtra (Mumbai, Thane, etc.).</li>
             </ul>
           </div>
 
@@ -398,7 +399,13 @@
           <div class="inline-error" id="phone-error">Please enter a valid 10-digit Indian phone number.</div>
         </div>
 
-
+        <div class="form-group" id="delivery-area-group">
+          <label for="checkout-area" class="form-label">Delivery Location & Charge *</label>
+          <select id="checkout-area" class="form-select">
+            <option value="roha" selected>📍 Roha (Home Delivery) — ₹30</option>
+            <option value="other_city">🚚 Other City (Courier Delivery) — ₹80</option>
+          </select>
+        </div>
 
         <div class="form-group" id="delivery-address-group">
           <label for="cust-address" class="form-label">Full Delivery Address & Landmark *</label>

@@ -37,11 +37,10 @@ const BUSINESS_CONFIG = {
   dailyOrderNotice: "Limited batches handcrafted daily to ensure maximum crunch and freshness (Max 25 orders/day).",
   pamphletImage: "pamphlet.jpg",
 
-  // Delivery Areas in Roha (read from config.js)
+  // Delivery Areas & Charges (read from config.js)
   deliveryAreas: (typeof CONFIG !== "undefined" && CONFIG.deliveryAreas) ? CONFIG.deliveryAreas : [
-    { id: "roha_town", name: "Roha Town", charge: 0 },
-    { id: "dhatav", name: "Dhatav / MIDC Roha", charge: 0 },
-    { id: "raigad_district", name: "Raigad District Delivery", charge: 0 }
+    { id: "roha", name: "Roha", charge: 30 },
+    { id: "other_city", name: "Other City", charge: 80 }
   ]
 };
 
