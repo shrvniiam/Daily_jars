@@ -90,6 +90,21 @@ document.addEventListener("DOMContentLoaded", () => {
  * Populate Business Information from BUSINESS_CONFIG
  */
 function populateBusinessInfo() {
+  const bookingBanner = document.getElementById("booking-open-banner");
+  if (bookingBanner) {
+    const bannerText = (typeof CONFIG !== "undefined" && typeof CONFIG.bookingBannerText !== "undefined")
+      ? CONFIG.bookingBannerText
+      : (typeof BUSINESS_CONFIG !== "undefined" ? BUSINESS_CONFIG.bookingBannerText : "Booking Open!");
+
+    if (bannerText && bannerText.trim().length > 0) {
+      bookingBanner.style.display = "inline-flex";
+      const textSpan = bookingBanner.querySelector(".booking-banner-text");
+      if (textSpan) textSpan.textContent = bannerText;
+    } else {
+      bookingBanner.style.display = "none";
+    }
+  }
+
   if (elements.preorderBanner) {
     elements.preorderBanner.innerHTML = `
       <div class="preorder-banner-content">

@@ -363,6 +363,37 @@ input, select, textarea {
   margin: 0 auto;
 }
 
+.hero-booking-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #FFE8A3 0%, #F5B800 100%);
+  color: #500911;
+  font-family: var(--font-heading, inherit);
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 0.4rem 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid #FFE8A3;
+  box-shadow: 0 4px 14px rgba(245, 184, 0, 0.4);
+  margin-bottom: 0.85rem;
+}
+
+.hero-booking-banner .pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #C41E3A;
+  box-shadow: 0 0 6px #C41E3A;
+  animation: pulseBookingDot 1.4s infinite ease-in-out;
+}
+
+@keyframes pulseBookingDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.5; }
+}
+
 .hero-welcome-badge {
   display: inline-flex;
   align-items: center;

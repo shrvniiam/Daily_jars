@@ -31,6 +31,7 @@ const BUSINESS_CONFIG = {
   googleMapsUrl: (typeof CONFIG !== "undefined" && CONFIG.googleMapsUrl) ? CONFIG.googleMapsUrl : "https://maps.google.com/?q=Roha+Raigad+Maharashtra+402109",
   
   // Top Banner Notice (All in English)
+  bookingBannerText: (typeof CONFIG !== "undefined" && CONFIG.bookingBannerText) ? CONFIG.bookingBannerText : "Booking Open!",
   preOrderDeadline: "Open for Festive Season (Diwali & Ganesh Festivals)",
   preOrderBannerText: "✨ Order from the comfort of your home! 100% Pure Ingredients • Traditional Homemade Preparation • Special Orders Accepted for All Occasions.",
   dailyOrderNotice: "Limited batches handcrafted daily to ensure maximum crunch and freshness (Max 25 orders/day).",
@@ -61,7 +62,7 @@ const PRODUCTS = [
     description: "Authentic roasted gram flour prepared with 100% pure cow ghee, green cardamom, and crunchy almond slivers.",
     ingredients: "Gram Flour (Chana Besan), Pure Cow Ghee, Sugar, Cardamom, Almonds",
     badge: "Pamphlet Item #1",
-    image: "besan-ladoo.png"
+    image: "images/ghee-besan-ladoo.jpg"
   },
   {
     id: "dalda-besan-ladoo",
@@ -75,7 +76,7 @@ const PRODUCTS = [
     description: "Classic homemade besan ladoos prepared with vanaspati ghee, roasted to a golden crumbly texture.",
     ingredients: "Chana Dal Besan, Vanaspati Ghee, Sugar, Cardamom",
     badge: "Pamphlet Item #2",
-    image: "besan-ladoo.png"
+    image: "images/dalda-besan-ladoo.jpg"
   },
   {
     id: "ghee-rava-ladoo",
@@ -89,7 +90,7 @@ const PRODUCTS = [
     description: "Fine semolina roasted gently in pure cow ghee with grated coconut, golden raisins, and fragrant cardamom.",
     ingredients: "Fine Semolina (Rava), Pure Cow Ghee, Dry Coconut, Sugar, Raisins, Cardamom",
     badge: "Pamphlet Item #3",
-    image: "rava-ladoo.png"
+    image: "images/ghee-rava-ladoo.jpg"
   },
   {
     id: "dalda-rava-ladoo",
@@ -103,7 +104,7 @@ const PRODUCTS = [
     description: "Traditional roasted semolina sweet made with vanaspati ghee, flavored with roasted cashews and raisins.",
     ingredients: "Semolina (Rava), Vanaspati Ghee, Sugar, Raisins, Cardamom",
     badge: "Pamphlet Item #4",
-    image: "rava-ladoo.png"
+    image: "images/dalda-rava-ladoo.jpg"
   },
 
   // --- ROW 2 ---
@@ -119,7 +120,7 @@ const PRODUCTS = [
     description: "Crisp flaky crescent pastry deep fried in pure cow ghee, generously stuffed with dry coconut, poppy seeds & dry fruits.",
     ingredients: "Wheat Flour crust, Pure Cow Ghee, Grated Dry Coconut, Sugar, Khus Khus (Poppy Seeds), Cardamom",
     badge: "Pamphlet Item #5",
-    image: "karanji.png"
+    image: "images/ghee-karanji.jpg"
   },
   {
     id: "oil-karanji",
@@ -133,7 +134,7 @@ const PRODUCTS = [
     description: "Crispy and light half-moon karanji fried in refined groundnut oil with a delicious sweet coconut filling.",
     ingredients: "Refined Wheat Flour, Dry Coconut, Sugar, Khus Khus, Refined Filtered Oil",
     badge: "Pamphlet Item #6",
-    image: "karanji.png"
+    image: "images/oil-karanji.jpg"
   },
   {
     id: "ghee-gul-karanji",
@@ -147,7 +148,7 @@ const PRODUCTS = [
     description: "Traditional recipe prepared with pure cow ghee and filled with organic sticky Kolhapuri jaggery, roasted coconut, and sesame.",
     ingredients: "Flour Crust, Pure Cow Ghee, Organic Jaggery, Roasted Coconut, White Sesame, Cardamom",
     badge: "Pamphlet Item #7",
-    image: "karanji.png"
+    image: "images/ghee-gul-karanji.jpg"
   },
   {
     id: "ghee-shankarpali",
@@ -161,7 +162,7 @@ const PRODUCTS = [
     description: "Diamond-shaped bite-sized sweet treats kneaded with milk and pure cow ghee for a flaky melt-in-mouth texture.",
     ingredients: "Wheat Flour, Pure Cow Ghee, Whole Milk, Granulated Sugar",
     badge: "Pamphlet Item #8",
-    image: "shankarpali.png"
+    image: "images/ghee-shankarpali.jpg"
   },
 
   // --- ROW 3 ---
@@ -177,7 +178,7 @@ const PRODUCTS = [
     description: "Savory diamond crisps delicately flavored with roasted carom seeds (ajwain), black pepper, rock salt, and pure cow ghee.",
     ingredients: "Wheat Flour, Pure Cow Ghee, Ajwain (Carom Seeds), Black Pepper, Rock Salt",
     badge: "Pamphlet Item #9",
-    image: "shankarpali.png"
+    image: "images/khare-ghee-shankarpali.jpg"
   },
   {
     id: "oil-shankarpali",
@@ -191,7 +192,7 @@ const PRODUCTS = [
     description: "Crispy sweet diamond treats fried to golden perfection in filtered oil. A delightful tea-time snack.",
     ingredients: "Wheat Flour, Refined Oil, Sugar, Milk, Pinch of Salt",
     badge: "Pamphlet Item #10",
-    image: "shankarpali.png"
+    image: "images/oil-shankarpali.jpg"
   },
   {
     id: "oats-makhana-ladoo",
@@ -199,13 +200,13 @@ const PRODUCTS = [
     subtitle: "Nutritious roasted oats & fox nuts sweet",
     category: "ladoo",
     categoryLabel: "Ladoo",
-    basePricePerKg: 800,
-    priceDisplayTag: "₹800 / kg",
+    basePricePerKg: 1000,
+    priceDisplayTag: "₹1000 / kg",
     weightType: "weight",
     description: "Healthy and guilt-free treats packed with roasted rolled oats, crunchy fox nuts (makhana), dates, jaggery & pure cow ghee.",
     ingredients: "Rolled Oats, Fox Nuts (Phool Makhana), Organic Jaggery, Cow Ghee, Mixed Dry Fruits",
     badge: "Pamphlet Item #11",
-    image: "makhana-ladoo.png"
+    image: "images/oats-makhana-ladoo.jpg"
   },
   {
     id: "nachni-ladoo",
@@ -219,7 +220,7 @@ const PRODUCTS = [
     description: "Calcium-rich sprouted ragi (finger millet) roasted with pure cow ghee and sweetened naturally with organic jaggery.",
     ingredients: "Sprouted Nachni (Ragi) Flour, Pure Cow Ghee, Organic Jaggery, Sesame Seeds, Cardamom",
     badge: "Pamphlet Item #12",
-    image: "ragi-ladoo.png"
+    image: "images/nachni-ladoo.jpg"
   },
 
   // --- ROW 4 ---
@@ -235,7 +236,7 @@ const PRODUCTS = [
     description: "Ayurvedic family recipe prepared with methi, edible gum (dink), dry ginger, dates, dry fruits, and pure desi cow ghee.",
     ingredients: "Fenugreek (Methi), Edible Gum (Dink), Sunth, Cow Ghee, Jaggery, Dry Fruits, Kharik",
     badge: "Pamphlet Item #13",
-    image: "methi-ladoo.png"
+    image: "images/methi-ladoo.jpg"
   },
   {
     id: "chivda",
@@ -249,7 +250,7 @@ const PRODUCTS = [
     description: "Crispy roasted thin poha tossed with roasted peanuts, daliya, golden cashews, curry leaves & mild green chillies.",
     ingredients: "Thin Poha (Flattened Rice), Peanuts, Roasted Chana Dal, Cashews, Curry Leaves, Mustard, Green Chillies",
     badge: "Pamphlet Item #14",
-    image: "chivda.png"
+    image: "images/chivda.jpg"
   },
   {
     id: "bhajani-chakli",
@@ -263,7 +264,7 @@ const PRODUCTS = [
     description: "Signature authentic crunchy spiral chakli made from 4-grain slow-roasted homemade bhajani flour. Crisp and non-greasy.",
     ingredients: "Traditional Grain Bhajani (Rice, Chana Dal, Urad Dal), Sesame, Ajwain, Hing, Red Chilli",
     badge: "Pamphlet Item #15",
-    image: "chakli.jpg"
+    image: "images/bhajani-chakli.jpg"
   },
   {
     id: "bhajani-chakli-peeth",
@@ -277,7 +278,7 @@ const PRODUCTS = [
     description: "Freshly roasted and stone-ground multi-grain bhajani flour for preparing fail-proof crunchy chaklis at home.",
     ingredients: "Slow-roasted Rice, Chana Dal, Urad Dal, Coriander Seeds, Cumin",
     badge: "Pamphlet Item #16",
-    image: "chakli-flour.png"
+    image: "images/bhajani-chakli-peeth.jpg"
   },
   {
     id: "anarase-peeth",
@@ -291,7 +292,7 @@ const PRODUCTS = [
     description: "Authentically prepared fermented aged rice and jaggery dough. Ready to shape and fry for delicate, mesh-patterned anarase.",
     ingredients: "Aged Ambemohar Rice, Pure Chemical-Free Jaggery, Cow Ghee",
     badge: "Pamphlet Item #17",
-    image: "chakli-flour.png"
+    image: "images/anarase-peeth.jpg"
   },
   {
     id: "anarase-1-no",
@@ -311,7 +312,7 @@ const PRODUCTS = [
     description: "Crispy and porous delicacy coated with white poppy seeds (khus khus), fried to a golden crunch in pure cow ghee.",
     ingredients: "Ambemohar Fermented Rice, Organic Jaggery, Khus Khus (Poppy Seeds), Pure Cow Ghee",
     badge: "Pamphlet Item #18",
-    image: "anarase.png"
+    image: "images/anarase-1-no.jpg"
   }
 ];
 

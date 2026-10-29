@@ -11,6 +11,9 @@ const CONFIG = {
   brandSubtitle: "by Ganesh Faral • Roha, Raigad",
   siteUrl: "https://dailyjars.in",
 
+  // Booking / Festive announcement banner (set to "" to hide)
+  bookingBannerText: "Booking Open!",
+
   // Owner WhatsApp number (digits only with country code)
   whatsappNumber: "918010089297",
 

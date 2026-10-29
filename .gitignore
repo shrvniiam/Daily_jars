@@ -24,3 +24,5 @@ node_modules/
 
 .vercel
 .env*
+
+scratch/
