@@ -40,6 +40,7 @@ const elements = {
   customerDateInput: document.getElementById("cust-date"),
   customerNotesInput: document.getElementById("cust-notes"),
   btnPlaceOrder: document.getElementById("btn-place-order"),
+  checkoutForm: document.getElementById("checkout-form"),
   
   // Validation Error Elements
   nameError: document.getElementById("name-error"),
@@ -72,7 +73,9 @@ const elements = {
   floatingWaBtn: document.getElementById("floating-wa-btn"),
   pickupAddressDisplay: document.getElementById("pickup-address-display"),
   preorderDeadlineDisplay: document.getElementById("preorder-deadline-display"),
-  pamphletModal: document.getElementById("pamphlet-modal")
+  pamphletModal: document.getElementById("pamphlet-modal"),
+  footerFoundersDisplay: document.getElementById("footer-founders-display"),
+  aboutFoundersDisplay: document.getElementById("about-founders-display")
 };
 
 // Initialize Application
@@ -120,10 +123,10 @@ function populateBusinessInfo() {
 
   if (elements.pickupAddressDisplay) {
     elements.pickupAddressDisplay.innerHTML = `
-      <strong>${BUSINESS_CONFIG.businessName} Kitchen</strong><br>
-      ${BUSINESS_CONFIG.pickupAddress}<br>
-      ${BUSINESS_CONFIG.landmark ? `<span style="font-size: 0.8rem; color: #8C7567;">Landmark: ${BUSINESS_CONFIG.landmark}</span><br>` : ""}
-      <a href="${BUSINESS_CONFIG.googleMapsUrl}" target="_blank" rel="noopener" style="color: #6B0F1A; font-weight: 600; text-decoration: underline; font-size: 0.85rem; margin-top: 4px; display: inline-block;">
+      <strong>${escapeHtml(BUSINESS_CONFIG.businessName)} Kitchen</strong><br>
+      ${escapeHtml(BUSINESS_CONFIG.pickupAddress)}<br>
+      ${BUSINESS_CONFIG.landmark ? `<span class="text-muted-notice">Landmark: ${escapeHtml(BUSINESS_CONFIG.landmark)}</span><br>` : ""}
+      <a href="${escapeHtml(BUSINESS_CONFIG.googleMapsUrl)}" target="_blank" rel="noopener noreferrer" class="maps-link-styled">
         📍 View on Google Maps
       </a>
     `;
@@ -132,11 +135,11 @@ function populateBusinessInfo() {
   // Populate tap-to-call phone numbers from the pamphlet: 9403000241, 9158729083, 9028587291
   if (elements.phonesContainer) {
     elements.phonesContainer.innerHTML = BUSINESS_CONFIG.phoneNumbers.map(p => `
-      <a href="tel:${p.tel}" class="phone-tap-link" title="Call ${p.number}">
+      <a href="tel:${escapeHtml(p.tel)}" class="phone-tap-link" title="Call ${escapeHtml(p.number)}">
         <span>📞</span>
         <div>
-          <div style="font-size: 0.72rem; color: #F5B800;">${p.label}</div>
-          <div style="font-size: 1.05rem; letter-spacing: 0.5px;">${p.number}</div>
+          <div class="footer-phone-label">${escapeHtml(p.label)}</div>
+          <div class="footer-phone-val">${escapeHtml(p.number)}</div>
         </div>
       </a>
     `).join("");
@@ -155,6 +158,46 @@ function populateBusinessInfo() {
     const today = new Date().toISOString().split("T")[0];
     elements.customerDateInput.min = today;
   }
+
+  // Populate Founders in Footer and About section from CONFIG
+  const founders = (typeof CONFIG !== "undefined" && Array.isArray(CONFIG.founders)) ? CONFIG.founders : [];
+  const foundersLabel = (typeof CONFIG !== "undefined" && CONFIG.foundersLabel) ? CONFIG.foundersLabel : "Founded by three friends:";
+
+  if (founders.length > 0) {
+    // Footer: "Founded by three friends: Reeta, Shushila & Nisha"
+    if (elements.footerFoundersDisplay) {
+      elements.footerFoundersDisplay.textContent = "";
+      const labelText = document.createTextNode(`${foundersLabel} `);
+      const namesSpan = document.createElement("span");
+      namesSpan.className = "footer-founders-names";
+      namesSpan.textContent = formatNamesList(founders, "&");
+      elements.footerFoundersDisplay.appendChild(labelText);
+      elements.footerFoundersDisplay.appendChild(namesSpan);
+    }
+
+    // About: "Daily Jar's was started by three friends, Reeta, Shushila and Nisha, to bring homemade Maharashtrian sweets and faral to your door."
+    if (elements.aboutFoundersDisplay) {
+      elements.aboutFoundersDisplay.textContent = "";
+      const startText = document.createTextNode("Daily Jar's was started by three friends, ");
+      const namesSpan = document.createElement("span");
+      namesSpan.className = "about-founders-names";
+      namesSpan.textContent = formatNamesList(founders, "and");
+      const endText = document.createTextNode(", to bring homemade Maharashtrian sweets and faral to your door.");
+      elements.aboutFoundersDisplay.appendChild(startText);
+      elements.aboutFoundersDisplay.appendChild(namesSpan);
+      elements.aboutFoundersDisplay.appendChild(endText);
+    }
+  }
+}
+
+/**
+ * Format names list (e.g. "Reeta, Shushila & Nisha" or "Reeta, Shushila and Nisha")
+ */
+function formatNamesList(names, conjunction = "&") {
+  if (!Array.isArray(names) || names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]} ${conjunction} ${names[1]}`;
+  return `${names.slice(0, -1).join(", ")} ${conjunction} ${names[names.length - 1]}`;
 }
 
 /**
@@ -243,7 +286,7 @@ function renderProducts() {
       weightSelectorHtml = `
         <div class="weight-selector-label">
           <span>Select Quantity</span>
-          <span style="color: var(--color-tomato); font-weight: 700;">Rate: ${product.priceDisplayTag}</span>
+          <span class="product-rate-badge">Rate: ${escapeHtml(product.priceDisplayTag)}</span>
         </div>
         <div class="weight-selector-chips">
           ${product.pieceOptions.map(opt => `
@@ -260,7 +303,7 @@ function renderProducts() {
       weightSelectorHtml = `
         <div class="weight-selector-label">
           <span>Select Weight</span>
-          <span style="color: var(--color-tomato); font-weight: 700;">Cost: ${product.priceDisplayTag}</span>
+          <span class="product-rate-badge">Cost: ${escapeHtml(product.priceDisplayTag)}</span>
         </div>
         <div class="weight-selector-chips">
           <button type="button" class="weight-chip ${currentWeight === "250g" ? "active" : ""}" data-product-id="${product.id}" data-weight="250g">250g</button>
@@ -280,7 +323,7 @@ function renderProducts() {
         <div class="product-body">
           <div class="product-title-group">
             <h3 class="product-title">${product.name}</h3>
-            <span class="product-subtitle-en" style="font-size: 0.78rem; color: #8C7567; font-weight: 500;">${product.subtitle}</span>
+            <span class="product-subtitle-en text-muted-notice">${escapeHtml(product.subtitle)}</span>
           </div>
           <p class="product-desc">${product.description}</p>
           <div class="product-ingredients">
@@ -464,18 +507,18 @@ function updateCartUI() {
       elements.cartItemsList.style.display = "flex";
       elements.cartItemsList.innerHTML = state.cart.map(item => `
         <div class="cart-item">
-          <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+          <img src="${item.image}" alt="${escapeHtml(item.name)}" class="cart-item-img">
           <div class="cart-item-details">
-            <div class="cart-item-name" title="${item.name}">${item.name}</div>
-            <div class="cart-item-meta">${item.weight} • ₹${item.unitPrice} each</div>
+            <div class="cart-item-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+            <div class="cart-item-meta">${escapeHtml(item.weight)} • ₹${item.unitPrice} each</div>
             <div class="cart-item-price">₹${item.unitPrice * item.quantity}</div>
           </div>
           <div class="cart-qty-controls">
-            <button type="button" class="qty-btn" onclick="updateItemQuantity('${item.id}', -1)">-</button>
+            <button type="button" class="qty-btn" data-action="qty-decrease" data-id="${escapeHtml(item.id)}">-</button>
             <span class="qty-value">${item.quantity}</span>
-            <button type="button" class="qty-btn" onclick="updateItemQuantity('${item.id}', 1)">+</button>
+            <button type="button" class="qty-btn" data-action="qty-increase" data-id="${escapeHtml(item.id)}">+</button>
           </div>
-          <button type="button" class="cart-remove-btn" title="Remove" onclick="removeItemFromCart('${item.id}')">✕</button>
+          <button type="button" class="cart-remove-btn" title="Remove" data-action="cart-remove" data-id="${escapeHtml(item.id)}">✕</button>
         </div>
       `).join("");
     }
@@ -489,7 +532,12 @@ function showToast(message) {
   if (!elements.toastContainer) return;
   const toast = document.createElement("div");
   toast.className = "toast";
-  toast.innerHTML = `<span>✨</span> <span>${message}</span>`;
+  const iconSpan = document.createElement("span");
+  iconSpan.textContent = "✨ ";
+  const textSpan = document.createElement("span");
+  textSpan.textContent = message;
+  toast.appendChild(iconSpan);
+  toast.appendChild(textSpan);
   elements.toastContainer.appendChild(toast);
 
   setTimeout(() => {
@@ -605,6 +653,32 @@ function setupEventListeners() {
     elements.customerDateInput.min = todayStr;
   }
 
+  // Prevent default checkout form submit
+  if (elements.checkoutForm) {
+    elements.checkoutForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handlePlaceOrder();
+    });
+  }
+
+  // Delegated cart item quantity and removal controls (zero inline onclick)
+  if (elements.cartItemsList) {
+    elements.cartItemsList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const action = btn.getAttribute("data-action");
+      const itemId = btn.getAttribute("data-id");
+      if (!itemId) return;
+      if (action === "qty-decrease") {
+        updateItemQuantity(itemId, -1);
+      } else if (action === "qty-increase") {
+        updateItemQuantity(itemId, 1);
+      } else if (action === "cart-remove") {
+        removeItemFromCart(itemId);
+      }
+    });
+  }
+
   // Place Order button in cart drawer
   if (elements.btnPlaceOrder) {
     elements.btnPlaceOrder.addEventListener("click", handlePlaceOrder);
@@ -663,6 +737,15 @@ function isPlaceholder(value) {
   if (/x{3,}/i.test(v)) return true; // contains XXX or xxx
   if (v === "91XXXXXXXXXX") return true;
   return false;
+}
+
+/**
+ * Helper: Strip ASCII and Unicode control characters and enforce maximum length
+ */
+function sanitizeInput(str, maxLength) {
+  if (str === null || str === undefined) return "";
+  const cleaned = String(str).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "").trim();
+  return maxLength ? cleaned.slice(0, maxLength) : cleaned;
 }
 
 /**
@@ -729,19 +812,28 @@ function handlePlaceOrder() {
   clearErr(elements.customerAddressInput, elements.addressError);
   clearErr(elements.customerDateInput, elements.dateError);
 
-  const name = elements.customerNameInput ? elements.customerNameInput.value.trim() : "";
-  const rawPhone = elements.customerPhoneInput ? elements.customerPhoneInput.value.trim() : "";
-  const address = elements.customerAddressInput ? elements.customerAddressInput.value.trim() : "";
-  const date = elements.customerDateInput ? elements.customerDateInput.value.trim() : "";
-  const notes = elements.customerNotesInput ? elements.customerNotesInput.value.trim() : "";
+  const rawName = elements.customerNameInput ? elements.customerNameInput.value : "";
+  const rawPhone = elements.customerPhoneInput ? elements.customerPhoneInput.value : "";
+  const rawAddress = elements.customerAddressInput ? elements.customerAddressInput.value : "";
+  const rawDate = elements.customerDateInput ? elements.customerDateInput.value : "";
+  const rawNotes = elements.customerNotesInput ? elements.customerNotesInput.value : "";
 
-  // 1. Validate Full Name
+  // Strip control characters and enforce maximum lengths (name 60, address 250, notes 300)
+  const name = sanitizeInput(rawName, 60);
+  const address = sanitizeInput(rawAddress, 250);
+  const notes = sanitizeInput(rawNotes, 300);
+  const date = sanitizeInput(rawDate, 30);
+  const phoneInputClean = sanitizeInput(rawPhone, 20);
+
+  // 1. Validate Full Name (limit length 60)
   if (!name || name.length < 2) {
-    setErr(elements.customerNameInput, elements.nameError, "Please enter your full name.");
+    setErr(elements.customerNameInput, elements.nameError, "Please enter your full name (up to 60 characters).");
+  } else if (name.length > 60) {
+    setErr(elements.customerNameInput, elements.nameError, "Name cannot exceed 60 characters.");
   }
 
   // 2. Validate 10-digit Indian Mobile Number
-  const digitsOnly = rawPhone.replace(/\D/g, "");
+  const digitsOnly = phoneInputClean.replace(/\D/g, "");
   let cleanPhone = digitsOnly;
   if (digitsOnly.length === 12 && digitsOnly.startsWith("91")) {
     cleanPhone = digitsOnly.slice(2);
@@ -750,16 +842,18 @@ function handlePlaceOrder() {
   }
 
   const indianPhoneRegex = /^[6-9]\d{9}$/;
-  if (!cleanPhone || !indianPhoneRegex.test(cleanPhone)) {
+  if (!cleanPhone || cleanPhone.length !== 10 || !indianPhoneRegex.test(cleanPhone)) {
     setErr(elements.customerPhoneInput, elements.phoneError, "Please enter a valid 10-digit Indian mobile number (e.g. 9822001122).");
   }
 
-  // 3. Validate Delivery Mode & Address
+  // 3. Validate Delivery Mode & Address (limit length 250)
   const deliveryCharge = getDeliveryFee();
 
   if (state.deliveryMode === "delivery") {
     if (!address || address.length < 5) {
-      setErr(elements.customerAddressInput, elements.addressError, "Please enter your full delivery address with landmark.");
+      setErr(elements.customerAddressInput, elements.addressError, "Please enter your full delivery address with landmark (up to 250 characters).");
+    } else if (address.length > 250) {
+      setErr(elements.customerAddressInput, elements.addressError, "Address cannot exceed 250 characters.");
     }
   }
 
@@ -828,25 +922,63 @@ function handlePlaceOrder() {
   if (elements.summaryTotal) elements.summaryTotal.textContent = `₹${grandTotal}`;
 
   if (elements.summaryCustomerInfo) {
-    elements.summaryCustomerInfo.innerHTML = `
-      <div><strong>Customer:</strong> ${escapeHtml(name)} • ${escapeHtml(cleanPhone)}</div>
-      <div><strong>Fulfillment:</strong> ${state.deliveryMode === "delivery" ? "Home Delivery" : `Self-Pickup (${(typeof CONFIG !== "undefined" && CONFIG.city) ? CONFIG.city : "Roha"} Kitchen)`}</div>
-      ${state.deliveryMode === "delivery" 
-        ? `<div><strong>Address:</strong> ${escapeHtml(address)}</div>` 
-        : `<div><strong>Pickup Kitchen:</strong> ${escapeHtml(BUSINESS_CONFIG.pickupAddress)}</div>`}
-      ${date ? `<div><strong>Preferred Date:</strong> ${escapeHtml(date)}</div>` : ""}
-      ${notes ? `<div><strong>Notes:</strong> ${escapeHtml(notes)}</div>` : ""}
-    `;
+    elements.summaryCustomerInfo.textContent = "";
+
+    const custDiv = document.createElement("div");
+    const custStrong = document.createElement("strong");
+    custStrong.textContent = "Customer: ";
+    custDiv.appendChild(custStrong);
+    custDiv.appendChild(document.createTextNode(`${name} • ${cleanPhone}`));
+    elements.summaryCustomerInfo.appendChild(custDiv);
+
+    const fulDiv = document.createElement("div");
+    const fulStrong = document.createElement("strong");
+    fulStrong.textContent = "Fulfillment: ";
+    fulDiv.appendChild(fulStrong);
+    const city = (typeof CONFIG !== "undefined" && CONFIG.city) ? CONFIG.city : "Roha";
+    fulDiv.appendChild(document.createTextNode(state.deliveryMode === "delivery" ? "Home Delivery" : `Self-Pickup (${city} Kitchen)`));
+    elements.summaryCustomerInfo.appendChild(fulDiv);
+
+    const addrDiv = document.createElement("div");
+    const addrStrong = document.createElement("strong");
+    if (state.deliveryMode === "delivery") {
+      addrStrong.textContent = "Address: ";
+      addrDiv.appendChild(addrStrong);
+      addrDiv.appendChild(document.createTextNode(address));
+    } else {
+      addrStrong.textContent = "Pickup Kitchen: ";
+      addrDiv.appendChild(addrStrong);
+      addrDiv.appendChild(document.createTextNode(BUSINESS_CONFIG.pickupAddress));
+    }
+    elements.summaryCustomerInfo.appendChild(addrDiv);
+
+    if (date) {
+      const dateDiv = document.createElement("div");
+      const dateStrong = document.createElement("strong");
+      dateStrong.textContent = "Preferred Date: ";
+      dateDiv.appendChild(dateStrong);
+      dateDiv.appendChild(document.createTextNode(date));
+      elements.summaryCustomerInfo.appendChild(dateDiv);
+    }
+
+    if (notes) {
+      const notesDiv = document.createElement("div");
+      const notesStrong = document.createElement("strong");
+      notesStrong.textContent = "Notes: ";
+      notesDiv.appendChild(notesStrong);
+      notesDiv.appendChild(document.createTextNode(notes));
+      elements.summaryCustomerInfo.appendChild(notesDiv);
+    }
   }
 
   if (elements.summaryItemsList) {
     elements.summaryItemsList.innerHTML = state.cart.map(item => `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.4rem 0; border-bottom:1px solid #F0E7CB;">
+      <div class="summary-item-row">
         <div>
-          <div style="font-weight:600; color:#2D1B14;">${escapeHtml(item.name)}</div>
-          <div style="font-size:0.75rem; color:#887268;">${escapeHtml(item.weight)} • Qty: ${item.quantity} × ₹${item.unitPrice}</div>
+          <div class="summary-item-name">${escapeHtml(item.name)}</div>
+          <div class="summary-item-meta">${escapeHtml(item.weight)} • Qty: ${item.quantity} × ₹${item.unitPrice}</div>
         </div>
-        <div style="font-weight:700; color:#C54F2D;">₹${item.unitPrice * item.quantity}</div>
+        <div class="summary-item-price">₹${item.unitPrice * item.quantity}</div>
       </div>
     `).join("");
   }
@@ -895,8 +1027,8 @@ function handleConfirmWhatsApp() {
     return;
   }
 
-  const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(activeOrder.waMessage)}`;
-  window.open(waUrl, "_blank");
+  const waUrl = `https://wa.me/${encodeURIComponent(waNumber)}?text=${encodeURIComponent(activeOrder.waMessage)}`;
+  window.open(waUrl, "_blank", "noopener,noreferrer");
 
   // Show pending confirmation notice
   if (elements.orderPendingNotice) {

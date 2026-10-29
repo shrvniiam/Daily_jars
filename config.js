@@ -11,6 +11,10 @@ const CONFIG = {
   brandSubtitle: "by Ganesh Faral • Roha, Raigad",
   siteUrl: "https://dailyjars.in",
 
+  // Founders Information
+  founders: ["Reeta", "Shushila", "Nisha"],
+  foundersLabel: "Founded by three friends:",
+
   // Booking / Festive announcement banner (set to "" to hide)
   bookingBannerText: "Booking Open!",
 

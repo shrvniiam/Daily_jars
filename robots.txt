@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /reference/
+Disallow: /.well-known/
 
 Sitemap: https://dailyjars.in/sitemap.xml

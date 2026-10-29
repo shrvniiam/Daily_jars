@@ -30,6 +30,20 @@
     "name": "Daily Jar's by Ganesh Faral",
     "url": "https://dailyjars.in",
     "description": "Authentic homemade festive Maharashtrian sweets and faral in pure cow ghee in Roha, Raigad.",
+    "founder": [
+      {
+        "@type": "Person",
+        "name": "Reeta"
+      },
+      {
+        "@type": "Person",
+        "name": "Shushila"
+      },
+      {
+        "@type": "Person",
+        "name": "Nisha"
+      }
+    ],
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Roha",
@@ -46,12 +60,8 @@
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪔</text></svg>">
 
-  <!-- Google Fonts: Playfair Display + Poppins -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500&family=Poppins:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
+  <!-- Self-Hosted Fonts: Playfair Display + Poppins -->
+  <link rel="stylesheet" href="fonts.css">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -83,9 +93,8 @@
         <!-- Desktop Navigation Links -->
         <nav class="nav-links" aria-label="Main Navigation">
           <li><a href="#products" class="nav-link">Faral Menu (18 Items)</a></li>
-          <li><button type="button" class="nav-link" data-open-pamphlet
-              style="cursor: pointer; background: none; border: none; font-size: inherit; font-family: inherit; font-weight: 600; color: #6B0F1A;">📜
-              View Menu Card</button></li>
+          <li><button type="button" class="nav-link btn-text-link" data-open-pamphlet>📜 View Menu Card</button></li>
+          <li><a href="#about" class="nav-link">About</a></li>
           <li><a href="#how-to-order" class="nav-link">How to Order</a></li>
           <li><a href="#footer" class="nav-link">Contact</a></li>
         </nav>
@@ -101,7 +110,7 @@
           </a>
           <button type="button" class="cart-toggle-btn" data-open-cart aria-label="Open Shopping Cart">
             <span>🛒</span>
-            <span style="display: none; @media(min-width: 480px){display: inline;}">Cart</span>
+            <span class="nav-cart-label">Cart</span>
             <span class="cart-count-badge" id="nav-cart-count">0</span>
           </button>
         </div>
@@ -118,7 +127,7 @@
       <div class="container">
         <div class="hero-content">
           <!-- Small Booking Open Banner (Configurable in config.js) -->
-          <div id="booking-open-banner" class="hero-booking-banner" style="display: none;">
+          <div id="booking-open-banner" class="hero-booking-banner is-hidden">
             <span class="pulse-dot"></span>
             <span class="booking-banner-text">Booking Open!</span>
             <span>❤️</span>
@@ -142,7 +151,7 @@
           </p>
 
           <div class="hero-cta-group">
-            <a href="https://wa.me/918010089297" id="hero-wa-btn" class="btn-primary-wa" target="_blank" rel="noopener">
+            <a href="https://wa.me/918010089297" id="hero-wa-btn" class="btn-primary-wa" target="_blank" rel="noopener noreferrer">
               <span>💬</span> Order on WhatsApp
             </a>
             <button type="button" class="btn-secondary-gold" data-open-pamphlet>
@@ -217,11 +226,27 @@
       </div>
     </section>
 
-    <!-- 5. How to Order Section -->
-    <section class="info-section" id="how-to-order" aria-label="How to Order and Delivery Process">
+    <!-- 5. About & How to Order Section -->
+    <section class="info-section" id="how-to-order" aria-label="About Us and Ordering Process">
       <div class="container">
+        <!-- About Section Card -->
+        <article class="about-card" id="about" aria-label="About Daily Jar's">
+          <div class="about-grid">
+            <div>
+              <span class="section-tag">About Our Kitchen</span>
+              <h3 class="about-quote">"Homemade Taste, Sweetness of Tradition"</h3>
+              <p class="about-founders-text" id="about-founders-display"></p>
+            </div>
+            <div>
+              <p class="section-desc">
+                Handcrafted with pure cow ghee and traditional recipes in Roha, Raigad. Every batch is prepared in hygienic small batches to bring authentic festive warmth directly to your family celebrations.
+              </p>
+            </div>
+          </div>
+        </article>
+
         <!-- How to Order Steps -->
-        <div style="margin-bottom: 2rem;">
+        <div class="mb-2rem">
           <div class="section-header">
             <span class="section-tag">Convenient Ordering</span>
             <h3 class="section-title">How to Place Your Order</h3>
@@ -259,9 +284,9 @@
         <div class="delivery-info-grid">
           <div class="info-box">
             <h4 class="info-box-title"><span>🚚</span> Delivery Information</h4>
-            <p style="margin-bottom: 0.5rem;">Fresh batches delivered directly to your doorstep.
+            <p class="mb-05rem">Fresh batches delivered directly to your doorstep.
             </p>
-            <ul style="list-style-type: disc; margin-left: 1.25rem; line-height: 1.6;">
+            <ul class="delivery-features-list">
               <li><strong>Roha Delivery:</strong> Nominal doorstep delivery charge of ₹30 in Roha.</li>
               <li><strong>Other Cities (Courier):</strong> Fast courier delivery across Maharashtra (Mumbai, Pune, Thane, etc.) at ₹80.</li>
               <li><strong>Self-Pickup:</strong> 100% Free pickup from our Roha kitchen.</li>
@@ -271,10 +296,10 @@
 
           <div class="info-box">
             <h4 class="info-box-title"><span>📍</span> Self-Pickup Point</h4>
-            <div id="pickup-address-display" style="line-height: 1.6; margin-bottom: 0.5rem;">
+            <div id="pickup-address-display" class="pickup-address-text">
               <!-- Populated dynamically -->
             </div>
-            <p style="font-size: 0.78rem; color: #8C7567;">*Please message us on WhatsApp before visiting so we have
+            <p class="text-muted-notice">*Please message us on WhatsApp before visiting so we have
               your freshly packed faral ready.</p>
           </div>
         </div>
@@ -289,13 +314,14 @@
         <!-- Brand Summary -->
         <div class="footer-brand">
           <h3>Daily Jar's</h3>
-          <p style="color: #F5B800; font-weight: 600; font-size: 0.92rem; margin-bottom: 0.4rem;">by Ganesh Faral • Roha, Raigad
+          <p class="text-gold-brand">by Ganesh Faral • Roha, Raigad
           </p>
           <p class="footer-tagline">"Homemade Taste, Sweetness of Tradition"</p>
           <p class="footer-desc">
             Purity • Taste • Heritage. Handcrafted with devotion and 100% pure cow ghee in Roha, Raigad.
           </p>
-          <p style="margin-top: 0.85rem; font-size: 0.95rem; color: #F5B800; font-weight: 700;">
+          <p class="footer-founders" id="footer-founders-display"></p>
+          <p class="text-gold-title">
             Order from the comfort of your home.
           </p>
         </div>
@@ -311,23 +337,23 @@
         <!-- Social & Payment -->
         <div>
           <h4 class="footer-section-title">Connect & Follow</h4>
-          <p style="font-size: 0.82rem; margin-bottom: 0.75rem; color: rgba(255,242,224,0.85);">
+          <p class="text-footer-note">
             Follow our daily kitchen preparations & festive updates:
           </p>
-          <a href="https://instagram.com/shreeganeshfaral" target="_blank" rel="noopener" class="instagram-btn">
+          <a href="https://instagram.com/shreeganeshfaral" target="_blank" rel="noopener noreferrer" class="instagram-btn">
             <span>📷</span> Follow on Instagram
           </a>
 
-          <div style="margin-top: 1.25rem;">
-            <div style="font-size: 0.75rem; color: #F5B800; font-weight: 700; text-transform: uppercase;">Payment Details</div>
-            <div style="font-size: 0.82rem; margin-top: 0.2rem; line-height: 1.4;">Shared directly by the owner on WhatsApp upon reviewing your order.</div>
+          <div class="mt-1-25rem">
+            <div class="footer-payment-title">Payment Details</div>
+            <div class="footer-payment-desc">Shared directly by the owner on WhatsApp upon reviewing your order.</div>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom">
         <p>© 2026 Daily Jar's by Ganesh Faral. All rights reserved.</p>
-        <p style="font-size: 0.75rem; margin-top: 0.35rem; color: rgba(255,242,224,0.5);">Official Menu & Instant
+        <p class="footer-copyright">Official Menu & Instant
           WhatsApp Ordering System</p>
       </div>
     </div>
@@ -362,10 +388,9 @@
       <div class="cart-empty-state" id="cart-empty-state">
         <span class="empty-icon">🪔</span>
         <h4 class="empty-title">Your cart is empty</h4>
-        <p style="font-size: 0.85rem; color: #8C7567; margin-bottom: 1.25rem;">Choose from our 18 authentic festive
+        <p class="text-muted-notice mb-1-25rem">Choose from our 18 authentic festive
           delicacies.</p>
-        <button type="button" class="btn-secondary-gold" data-close-cart
-          style="display: inline-flex; width: auto; padding: 0.6rem 1.4rem;">
+        <button type="button" class="btn-secondary-gold btn-inline-pill" data-close-cart>
           View Faral Menu
         </button>
       </div>
@@ -374,8 +399,8 @@
         <!-- Rendered by app.js -->
       </div>
 
-      <div style="margin-top: 1rem;">
-        <label class="form-label" style="display: block; margin-bottom: 0.4rem;">Order Fulfillment Type</label>
+      <div class="mt-1rem">
+        <label class="form-label form-label-block">Order Fulfillment Type</label>
         <div class="delivery-mode-toggle">
           <button type="button" class="mode-tab active" id="mode-delivery-btn">
             <span>🚚</span> Home Delivery
@@ -386,10 +411,10 @@
         </div>
       </div>
 
-      <form class="checkout-form" id="checkout-form" novalidate onsubmit="return false;">
+      <form class="checkout-form" id="checkout-form" novalidate>
         <div class="form-group">
           <label for="cust-name" class="form-label">Your Full Name *</label>
-          <input type="text" id="cust-name" class="form-input" placeholder="e.g. Rahul Patil" required autocomplete="name">
+          <input type="text" id="cust-name" class="form-input" placeholder="e.g. Rahul Patil" required autocomplete="name" maxlength="60">
           <div class="inline-error" id="name-error">Please enter your full name.</div>
         </div>
 
@@ -410,7 +435,7 @@
         <div class="form-group" id="delivery-address-group">
           <label for="cust-address" class="form-label">Full Delivery Address & Landmark *</label>
           <textarea id="cust-address" rows="2" class="form-textarea"
-            placeholder="Flat No., Society Name, Street, Landmark" autocomplete="street-address"></textarea>
+            placeholder="Flat No., Society Name, Street, Landmark" autocomplete="street-address" maxlength="250"></textarea>
           <div class="inline-error" id="address-error">Please enter your delivery address with landmark.</div>
         </div>
 
@@ -423,18 +448,18 @@
         <div class="form-group">
           <label for="cust-notes" class="form-label">Special Requests (Optional)</label>
           <input type="text" id="cust-notes" class="form-input"
-            placeholder="e.g. Less spicy chivda, special packaging note">
+            placeholder="e.g. Less spicy chivda, special packaging note" maxlength="300">
         </div>
       </form>
 
       <div class="cart-summary-box">
         <div class="summary-row">
           <span>Items Subtotal:</span>
-          <span id="cart-subtotal" style="font-weight: 600;">₹0</span>
+          <span id="cart-subtotal" class="fw-600">₹0</span>
         </div>
         <div class="summary-row">
           <span>Delivery Charges:</span>
-          <span id="cart-delivery-fee" style="font-weight: 600;">Free</span>
+          <span id="cart-delivery-fee" class="fw-600">Free</span>
         </div>
         <div class="summary-row total-row">
           <span>Grand Total:</span>
@@ -444,10 +469,10 @@
     </div>
 
     <div class="cart-footer">
-      <button type="button" class="btn-checkout-wa btn-large-tap" id="btn-place-order" style="width: 100%;">
+      <button type="button" class="btn-checkout-wa btn-large-tap w-100" id="btn-place-order">
         <span>🛒</span> Place Order
       </button>
-      <div style="text-align: center; font-size: 0.76rem; color: #8C7567; margin-top: 0.5rem;">
+      <div class="footer-note-muted">
         💬 Orders are sent to the owner on WhatsApp for confirmation
       </div>
     </div>
@@ -457,8 +482,8 @@
   <div class="upi-modal-overlay" id="order-summary-modal" role="dialog" aria-modal="true" aria-labelledby="order-summary-title">
     <div class="upi-modal-content">
       <div class="upi-header">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <span style="font-size: 1.25rem;">📋</span>
+        <div class="summary-header-flex">
+          <span class="summary-icon-large">📋</span>
           <h3 id="order-summary-title">Order Summary</h3>
         </div>
         <button type="button" class="cart-close-btn" data-close-order-modal aria-label="Close Order Summary">✕</button>
@@ -467,32 +492,32 @@
       <div class="upi-body">
         <!-- Order ID Badge -->
         <div class="order-id-badge">
-          <span style="font-size: 0.85rem; color: var(--color-text-secondary); font-weight: 600;">Order ID:</span>
-          <strong id="summary-order-id" style="font-family: monospace; font-size: 1.05rem; color: var(--color-tomato);">DJ-XXXXXX-XXXX</strong>
+          <span class="summary-order-id-label">Order ID:</span>
+          <strong id="summary-order-id" class="summary-order-id-val">DJ-XXXXXX-XXXX</strong>
         </div>
 
         <!-- Customer & Delivery Summary -->
-        <div style="background: var(--color-crema-subtle); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.55;">
+        <div class="summary-cust-card">
           <div id="summary-customer-info"></div>
         </div>
 
         <!-- Ordered Delicacies List -->
-        <div style="margin-bottom: 1rem;">
-          <div style="font-weight: 700; font-size: 0.82rem; color: var(--color-tomato); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px;">
+        <div class="mb-1rem">
+          <div class="summary-section-heading">
             Ordered Items
           </div>
-          <div id="summary-items-list" style="max-height: 190px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; background: var(--color-white); font-size: 0.85rem;"></div>
+          <div id="summary-items-list" class="summary-items-scroll"></div>
         </div>
 
         <!-- Price Breakdown -->
-        <div class="cart-summary-box" style="margin-bottom: 1.1rem;">
+        <div class="cart-summary-box mb-1-1rem">
           <div class="summary-row">
             <span>Items Subtotal:</span>
-            <span id="summary-subtotal" style="font-weight: 600;">₹0</span>
+            <span id="summary-subtotal" class="fw-600">₹0</span>
           </div>
           <div class="summary-row">
             <span>Delivery Charges:</span>
-            <span id="summary-delivery" style="font-weight: 600;">₹0</span>
+            <span id="summary-delivery" class="fw-600">₹0</span>
           </div>
           <div class="summary-row total-row">
             <span>Grand Total:</span>
@@ -501,28 +526,28 @@
         </div>
 
         <!-- Placeholder Notice (Shown if owner WhatsApp is still placeholder) -->
-        <div id="wa-placeholder-notice" style="display: none; background: #FFF3CD; border: 1px solid #FFE69C; color: #856404; padding: 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1rem; text-align: center; line-height: 1.4;">
+        <div id="wa-placeholder-notice" class="wa-notice-box is-hidden">
           ⚠️ <strong>WhatsApp ordering is currently paused:</strong> The owner's WhatsApp number is not configured in <code>config.js</code>. Please contact the kitchen directly.
         </div>
 
         <!-- Primary Action Button: Send on WhatsApp for confirmation -->
         <div id="order-actions-container">
-          <button type="button" id="btn-confirm-whatsapp" class="btn-checkout-wa btn-large-tap" style="width: 100%;">
+          <button type="button" id="btn-confirm-whatsapp" class="btn-checkout-wa btn-large-tap w-100">
             <span>💬</span> Send Order on WhatsApp for Confirmation
           </button>
         </div>
 
         <!-- Order Pending Confirmation Notice (Appears after clicking WhatsApp button) -->
-        <div id="order-pending-notice" class="order-pending-notice" style="display: none;">
-          <span style="font-size: 1.35rem; line-height: 1;">⏳</span>
+        <div id="order-pending-notice" class="order-pending-notice is-hidden">
+          <span class="pending-notice-icon">⏳</span>
           <div>
             <strong>Thank you!</strong> Your order is not confirmed until the owner replies on WhatsApp. Please send the message to complete your order.
           </div>
         </div>
 
         <!-- Secondary Action: WhatsApp Channel for updates & offers -->
-        <div id="channel-container" style="display: none; margin-top: 0.85rem;">
-          <a href="#" id="btn-wa-channel" target="_blank" rel="noopener" class="btn-wa-channel btn-large-tap">
+        <div id="channel-container" class="mt-085rem is-hidden">
+          <a href="#" id="btn-wa-channel" target="_blank" rel="noopener noreferrer" class="btn-wa-channel btn-large-tap">
             <span>📢</span> Follow our WhatsApp Channel for offers and festival updates
           </a>
         </div>
@@ -532,17 +557,15 @@
 
   <!-- 10. Official Printed Menu Card Modal -->
   <div class="upi-modal-overlay" id="pamphlet-modal" role="dialog" aria-modal="true" aria-label="Official Menu Card">
-    <div class="upi-modal-content" style="max-width: 600px;">
+    <div class="upi-modal-content pamphlet-modal-box">
       <div class="upi-header">
         <h3>📜 Official Printed Menu Card</h3>
         <button type="button" class="cart-close-btn" data-close-pamphlet aria-label="Close Menu Card">✕</button>
       </div>
-      <div style="padding: 1rem; text-align: center; max-height: 80vh; overflow-y: auto;">
-        <img src="pamphlet.jpg" alt="Official Menu Card of Daily Jar's by Ganesh Faral"
-          style="width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border-gold);">
-        <div style="margin-top: 1rem;">
-          <button type="button" class="btn-secondary-gold" data-close-pamphlet
-            style="display: inline-flex; width: auto; padding: 0.6rem 1.4rem;">
+      <div class="pamphlet-modal-body">
+        <img src="pamphlet.jpg" alt="Official Menu Card of Daily Jar's by Ganesh Faral" class="pamphlet-modal-img">
+        <div class="mt-1rem">
+          <button type="button" class="btn-secondary-gold btn-inline-pill" data-close-pamphlet>
             Back to Faral Menu
           </button>
         </div>
@@ -551,7 +574,7 @@
   </div>
 
   <!-- Floating WhatsApp Chat Button on Every Page -->
-  <a href="#" id="floating-wa-btn" class="floating-wa-btn" title="Need help? Chat on WhatsApp" aria-label="Chat with Owner on WhatsApp" target="_blank" rel="noopener">
+  <a href="#" id="floating-wa-btn" class="floating-wa-btn" title="Need help? Chat on WhatsApp" aria-label="Chat with Owner on WhatsApp" target="_blank" rel="noopener noreferrer">
     <span aria-hidden="true">💬</span>
   </a>
 
