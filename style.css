@@ -2039,8 +2039,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   width: auto;
   max-width: 140px;
   object-fit: contain;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
   display: block;
+  background: #FFFFFF;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .footer-fssai-lic {

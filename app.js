@@ -193,12 +193,14 @@ function populateBusinessInfo() {
   // Populate FSSAI Block in Footer from CONFIG
   const fssaiNum = (typeof CONFIG !== "undefined" && CONFIG.fssaiNumber) ? CONFIG.fssaiNumber : "";
   const fssaiValid = (typeof CONFIG !== "undefined" && CONFIG.fssaiValidUntil) ? CONFIG.fssaiValidUntil : "";
-  const fssaiLogoPath = (typeof CONFIG !== "undefined" && CONFIG.fssaiLogo) ? CONFIG.fssaiLogo : "";
+  const fssaiLogoPath = (typeof CONFIG !== "undefined" && typeof CONFIG.fssaiLogo !== "undefined")
+    ? CONFIG.fssaiLogo
+    : "images/fssai-logo.png";
 
   if (elements.footerFssaiDisplay && fssaiNum) {
     elements.footerFssaiDisplay.textContent = "";
 
-    // If FSSAI logo is configured/present, render it with height 48px and loading="lazy"
+    // Render official FSSAI logo (height 48px, alt="FSSAI logo", loading="lazy")
     if (fssaiLogoPath) {
       const logoImg = document.createElement("img");
       logoImg.src = fssaiLogoPath;
