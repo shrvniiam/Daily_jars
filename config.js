@@ -15,6 +15,10 @@ const CONFIG = {
   founders: ["Reeta", "Shushila", "Nisha"],
   foundersLabel: "Founded by three friends:",
 
+  // FSSAI Food Safety Details
+  fssaiNumber: "21526071006538",
+  fssaiValidUntil: "07-10-2031",
+
   // Booking / Festive announcement banner (set to "" to hide)
   bookingBannerText: "Booking Open!",
 

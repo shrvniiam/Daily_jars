@@ -75,7 +75,8 @@ const elements = {
   preorderDeadlineDisplay: document.getElementById("preorder-deadline-display"),
   pamphletModal: document.getElementById("pamphlet-modal"),
   footerFoundersDisplay: document.getElementById("footer-founders-display"),
-  aboutFoundersDisplay: document.getElementById("about-founders-display")
+  aboutFoundersDisplay: document.getElementById("about-founders-display"),
+  footerFssaiDisplay: document.getElementById("footer-fssai-display")
 };
 
 // Initialize Application
@@ -186,6 +187,47 @@ function populateBusinessInfo() {
       elements.aboutFoundersDisplay.appendChild(startText);
       elements.aboutFoundersDisplay.appendChild(namesSpan);
       elements.aboutFoundersDisplay.appendChild(endText);
+    }
+  }
+
+  // Populate FSSAI Block in Footer from CONFIG
+  const fssaiNum = (typeof CONFIG !== "undefined" && CONFIG.fssaiNumber) ? CONFIG.fssaiNumber : "";
+  const fssaiValid = (typeof CONFIG !== "undefined" && CONFIG.fssaiValidUntil) ? CONFIG.fssaiValidUntil : "";
+  const fssaiLogoPath = (typeof CONFIG !== "undefined" && CONFIG.fssaiLogo) ? CONFIG.fssaiLogo : "";
+
+  if (elements.footerFssaiDisplay && fssaiNum) {
+    elements.footerFssaiDisplay.textContent = "";
+
+    // If FSSAI logo is configured/present, render it with height 48px and loading="lazy"
+    if (fssaiLogoPath) {
+      const logoImg = document.createElement("img");
+      logoImg.src = fssaiLogoPath;
+      logoImg.alt = "FSSAI logo";
+      logoImg.loading = "lazy";
+      logoImg.className = "footer-fssai-logo";
+      elements.footerFssaiDisplay.appendChild(logoImg);
+    }
+
+    // Line 1: FSSAI Lic. No. <number>
+    const licDiv = document.createElement("div");
+    licDiv.className = "footer-fssai-lic";
+    licDiv.appendChild(document.createTextNode("FSSAI Lic. No. "));
+    const numSpan = document.createElement("span");
+    numSpan.className = "footer-fssai-lic-num";
+    numSpan.textContent = fssaiNum;
+    licDiv.appendChild(numSpan);
+    elements.footerFssaiDisplay.appendChild(licDiv);
+
+    // Line 2: Valid until: <date>
+    if (fssaiValid) {
+      const validDiv = document.createElement("div");
+      validDiv.className = "footer-fssai-valid";
+      validDiv.appendChild(document.createTextNode("Valid until: "));
+      const dateSpan = document.createElement("span");
+      dateSpan.className = "footer-fssai-valid-date";
+      dateSpan.textContent = fssaiValid;
+      validDiv.appendChild(dateSpan);
+      elements.footerFssaiDisplay.appendChild(validDiv);
     }
   }
 }

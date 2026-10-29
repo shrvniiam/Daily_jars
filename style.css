@@ -2025,4 +2025,47 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 600;
 }
 
+/* FSSAI Registration Block */
+.footer-fssai {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-family: var(--font-body);
+}
+
+.footer-fssai-logo {
+  height: 48px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  margin-bottom: 0.35rem;
+  display: block;
+}
+
+.footer-fssai-lic {
+  font-size: 0.82rem;
+  color: var(--color-crema);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.footer-fssai-lic-num {
+  color: #F5B800;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.footer-fssai-valid {
+  font-size: 0.78rem;
+  color: rgba(242, 231, 203, 0.75);
+  line-height: 1.4;
+}
+
+.footer-fssai-valid-date {
+  color: #F5B800;
+  font-weight: 600;
+}
+
+
 
