@@ -39,8 +39,7 @@ const BUSINESS_CONFIG = {
 
   // Delivery Areas & Charges (read from config.js)
   deliveryAreas: (typeof CONFIG !== "undefined" && CONFIG.deliveryAreas) ? CONFIG.deliveryAreas : [
-    { id: "roha", name: "Roha", charge: 30 },
-    { id: "other_city", name: "Other City", charge: 80 }
+    { id: "roha", name: "Roha", charge: 30 }
   ]
 };
 

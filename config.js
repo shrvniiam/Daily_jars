@@ -37,9 +37,8 @@ const CONFIG = {
   pincode: "402109",
   googleMapsUrl: "https://maps.google.com/?q=Roha+Raigad+Maharashtra+402109",
 
-  // Delivery Areas & Charges (Roha ₹30, Other City ₹80)
+  // Delivery Areas & Charges (Roha ₹30)
   deliveryAreas: [
-    { id: "roha", name: "Roha", charge: 30 },
-    { id: "other_city", name: "Other City", charge: 80 }
+    { id: "roha", name: "Roha", charge: 30 }
   ]
 };

@@ -29,6 +29,7 @@ const elements = {
   cartSubtotal: document.getElementById("cart-subtotal"),
   cartDeliveryFee: document.getElementById("cart-delivery-fee"),
   cartTotal: document.getElementById("cart-total"),
+  deliveryAreaDisplay: document.getElementById("delivery-area-display"),
   deliveryAreaSelect: document.getElementById("checkout-area"),
   deliveryAreaGroup: document.getElementById("delivery-area-group"),
   deliveryAddressGroup: document.getElementById("delivery-address-group"),
@@ -259,20 +260,25 @@ function getDeliveryFee() {
 }
 
 /**
- * Populate Delivery Areas Dropdown
+ * Populate Delivery Area Information (read from config.js)
  */
 function populateDeliveryAreas() {
-  if (!elements.deliveryAreaSelect) return;
+  const areas = (typeof CONFIG !== "undefined" && CONFIG.deliveryAreas) 
+    ? CONFIG.deliveryAreas 
+    : (BUSINESS_CONFIG.deliveryAreas || []);
 
-  elements.deliveryAreaSelect.innerHTML = (BUSINESS_CONFIG.deliveryAreas || []).map(area => `
-    <option value="${area.id}">${area.name === 'Roha' ? '📍 Roha (Home Delivery)' : '🚚 Other City (Courier Delivery)'} — ₹${area.charge}</option>
-  `).join("");
-
-  if (BUSINESS_CONFIG.deliveryAreas && BUSINESS_CONFIG.deliveryAreas.length > 0) {
-    if (!state.selectedDeliveryAreaId) {
-      state.selectedDeliveryAreaId = BUSINESS_CONFIG.deliveryAreas[0].id;
+  if (areas && areas.length > 0) {
+    const defaultArea = areas[0];
+    state.selectedDeliveryAreaId = defaultArea.id;
+    if (elements.deliveryAreaDisplay) {
+      elements.deliveryAreaDisplay.textContent = `Home Delivery in ${defaultArea.name}: ₹${defaultArea.charge}`;
     }
-    elements.deliveryAreaSelect.value = state.selectedDeliveryAreaId;
+    if (elements.deliveryAreaSelect) {
+      elements.deliveryAreaSelect.innerHTML = areas.map(area => `
+        <option value="${area.id}">Home Delivery in ${area.name}: ₹${area.charge}</option>
+      `).join("");
+      elements.deliveryAreaSelect.value = defaultArea.id;
+    }
   }
 }
 
@@ -526,7 +532,7 @@ function updateCartUI() {
       elements.cartDeliveryFee.textContent = "FREE (Self Pickup)";
     } else {
       const area = (BUSINESS_CONFIG.deliveryAreas || []).find(a => a.id === state.selectedDeliveryAreaId);
-      const areaLabel = area ? area.name : (state.selectedDeliveryAreaId === "other_city" ? "Other City" : "Roha");
+      const areaLabel = area ? area.name : "Roha";
       elements.cartDeliveryFee.textContent = `₹${deliveryFee} (${areaLabel} Delivery)`;
     }
   }
@@ -914,7 +920,7 @@ function handlePlaceOrder() {
   const orderId = generateOrderId();
 
   const area = (BUSINESS_CONFIG.deliveryAreas || []).find(a => a.id === state.selectedDeliveryAreaId);
-  const areaLabel = area ? area.name : (state.selectedDeliveryAreaId === "other_city" ? "Other City" : "Roha");
+  const areaLabel = area ? area.name : "Roha";
 
   // Build English WhatsApp Order Message exactly per template
   let waMessage = `New Order ${orderId}\n`;
@@ -926,7 +932,7 @@ function handlePlaceOrder() {
     waMessage += `- ${item.name}, ${item.weight}, Qty: ${item.quantity}, Price: ₹${itemTotal}\n`;
   });
   waMessage += `Subtotal: ₹${subtotal}\n`;
-  waMessage += `Delivery: ${state.deliveryMode === "delivery" ? `₹${deliveryCharge} (${areaLabel})` : "₹0 (Self-Pickup)"}\n`;
+  waMessage += `${state.deliveryMode === "delivery" ? `Home Delivery (${areaLabel}): ₹${deliveryCharge}` : `Self Pickup (${areaLabel})`}\n`;
   waMessage += `Total: ₹${grandTotal}\n`;
 
   if (state.deliveryMode === "delivery") {
@@ -961,7 +967,7 @@ function handlePlaceOrder() {
   if (elements.summaryOrderId) elements.summaryOrderId.textContent = orderId;
   if (elements.summarySubtotal) elements.summarySubtotal.textContent = `₹${subtotal}`;
   if (elements.summaryDelivery) {
-    elements.summaryDelivery.textContent = state.deliveryMode === "delivery" ? `₹${deliveryCharge} (${areaLabel})` : "₹0 (Self-Pickup)";
+    elements.summaryDelivery.textContent = state.deliveryMode === "delivery" ? `Home Delivery (${areaLabel}): ₹${deliveryCharge}` : `Self Pickup (${areaLabel})`;
   }
   if (elements.summaryTotal) elements.summaryTotal.textContent = `₹${grandTotal}`;
 
